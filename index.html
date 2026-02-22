@@ -3,87 +3,235 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SPSV2 • Teste de Login (Supabase)</title>
+  <title>SPSV2 • Personal na Palma da Sua Mão</title>
+  <meta name="theme-color" content="#0b0f14"/>
   <style>
-    :root{--bg:#0b0f14;--card:#101826;--muted:#8aa0b6;--text:#e9f0f7;--ok:#2ee59d;--warn:#ffcc66;--bad:#ff5c77;--line:rgba(255,255,255,.08)}
+    :root{
+      --bg:#0b0f14; --panel:#0f1622; --card:rgba(255,255,255,.06); --line:rgba(255,255,255,.10);
+      --text:#eaf2fb; --muted:#93a7bd; --aqua:#64c8ff; --green:#2ee59d; --warn:#ffcc66; --bad:#ff5c77;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --r:18px;
+    }
     *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
-    body{margin:0;background:radial-gradient(900px 600px at 20% 10%, rgba(100,200,255,.14), transparent 60%),
-         radial-gradient(900px 600px at 80% 30%, rgba(46,229,157,.12), transparent 60%),
-         var(--bg);color:var(--text)}
-    .wrap{max-width:980px;margin:0 auto;padding:22px}
-    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
-    h1{margin:0;font-size:20px;letter-spacing:.3px}
-    .sub{margin:6px 0 0;color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;margin-top:16px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-          border:1px solid var(--line);border-radius:18px;padding:16px;backdrop-filter: blur(10px)}
-    label{display:block;color:var(--muted);font-size:12px;margin:10px 0 6px}
-    input{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);
-          background:rgba(0,0,0,.25);color:var(--text);outline:none}
-    input:focus{border-color:rgba(46,229,157,.35)}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .btn{padding:12px 14px;border-radius:12px;border:1px solid var(--line);
-         background:rgba(46,229,157,.12);color:var(--text);cursor:pointer;font-weight:650}
-    .btn:hover{border-color:rgba(46,229,157,.35)}
-    .btn.secondary{background:rgba(100,200,255,.12)}
+    body{
+      margin:0;color:var(--text);
+      background:
+        radial-gradient(900px 520px at 15% 12%, rgba(100,200,255,.16), transparent 60%),
+        radial-gradient(900px 520px at 85% 30%, rgba(46,229,157,.12), transparent 60%),
+        radial-gradient(700px 520px at 55% 90%, rgba(255,204,102,.10), transparent 55%),
+        var(--bg);
+    }
+    .wrap{max-width:1160px;margin:0 auto;padding:18px}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:10px}
+    .logo{
+      width:40px;height:40px;border-radius:14px;
+      background:linear-gradient(135deg, rgba(100,200,255,.35), rgba(46,229,157,.25));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+    h1{margin:0;font-size:16px;letter-spacing:.4px}
+    .sub{margin:4px 0 0;color:var(--muted);font-size:12px}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18); color:var(--muted); font-size:12px
+    }
+    .grid{display:grid;grid-template-columns: 1.2fr .8fr; gap:14px; margin-top:14px}
+    @media(max-width:960px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid var(--line); border-radius:var(--r); padding:14px;
+      backdrop-filter: blur(10px);
+      box-shadow:var(--shadow);
+    }
+    .hero{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap
+    }
+    .hero h2{margin:0;font-size:22px}
+    .hero p{margin:8px 0 0;color:var(--muted);font-size:13px;max-width:720px}
+    .btns{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      padding:11px 14px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(46,229,157,.14);color:var(--text);font-weight:750;cursor:pointer;
+    }
+    .btn:hover{border-color:rgba(46,229,157,.40)}
+    .btn.secondary{background:rgba(100,200,255,.14)}
     .btn.danger{background:rgba(255,92,119,.12)}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;
-          border:1px solid var(--line);color:var(--muted);font-size:12px}
-    pre{white-space:pre-wrap;word-break:break-word;margin:0;color:#d8e6f4;font-size:12px;line-height:1.35}
-    .status{margin-top:10px;padding:10px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.25)}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+    @media(max-width:960px){.kpis{grid-template-columns:repeat(2,1fr)}}
+    .kpi{
+      border-radius:16px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18); padding:12px;
+    }
+    .kpi .t{color:var(--muted);font-size:11px}
+    .kpi .v{font-size:18px;font-weight:900;margin-top:4px}
+    .kpi .s{color:var(--muted);font-size:11px;margin-top:6px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    @media(max-width:960px){.row{grid-template-columns:1fr}}
+    .chart{
+      border-radius:16px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18); padding:12px; min-height:170px;
+    }
+    .chart h3{margin:0;font-size:12px;color:var(--muted);font-weight:700}
+    .bars{display:flex;gap:8px;align-items:flex-end;height:110px;margin-top:12px}
+    .bar{flex:1;border-radius:10px;background:linear-gradient(180deg, rgba(100,200,255,.35), rgba(46,229,157,.15));border:1px solid rgba(255,255,255,.08)}
+    .legend{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:10px}
+    .mini{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .mini .chip{
+      padding:8px 10px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(0,0,0,.18);color:var(--muted);font-size:12px
+    }
+
+    /* LOGIN MODAL */
+    .modalWrap{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.55)}
+    .modal{width:min(720px, 100%);border-radius:22px;border:1px solid var(--line);background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));box-shadow:var(--shadow);padding:14px}
+    .modalTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .modalTop h3{margin:0;font-size:14px;color:var(--muted);font-weight:800;letter-spacing:.3px}
+    .x{border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--text);border-radius:12px;padding:8px 10px;cursor:pointer}
+    .form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    @media(max-width:720px){.form{grid-template-columns:1fr}}
+    label{display:block;color:var(--muted);font-size:12px;margin:8px 0 6px}
+    input{
+      width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(0,0,0,.22);color:var(--text);outline:none
+    }
+    input:focus{border-color:rgba(46,229,157,.40)}
+    pre{margin:0;white-space:pre-wrap;word-break:break-word;font-size:12px;color:#d8e6f4}
+    .status{margin-top:10px;padding:10px;border-radius:16px;border:1px solid var(--line);background:rgba(0,0,0,.22)}
     .ok{border-color:rgba(46,229,157,.35)}
     .bad{border-color:rgba(255,92,119,.35)}
     .warn{border-color:rgba(255,204,102,.35)}
-    .footer{margin-top:14px;color:var(--muted);font-size:12px;text-align:center}
-    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .footer{margin-top:14px;text-align:center;color:var(--muted);font-size:12px}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace}
   </style>
 </head>
 <body>
 <div class="wrap">
+
   <div class="top">
-    <div>
-      <h1>SPSV2 • Teste de Login (Supabase)</h1>
-      <div class="sub">Use este arquivo só para validar: login (email/senha) + leitura do perfil em <span class="mono">profiles</span>.</div>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>SPSV2 • Personal na Palma da Sua Mão</h1>
+        <div class="sub">Dashboard + login Supabase + leitura do <span class="mono">profiles</span> (base pronta para V1/V2/V3).</div>
+      </div>
     </div>
-    <div class="pill">✅ URL: <span class="mono" id="urlPill"></span></div>
+    <div class="pill">✅ Supabase: <span class="mono" id="supUrlPill"></span></div>
   </div>
 
   <div class="grid">
+    <!-- ESQUERDA: DASH -->
     <div class="card">
-      <h2 style="margin:0 0 6px;font-size:16px">1) Entrar</h2>
-      <div class="sub">Digite o email/senha do usuário que você criou no Supabase.</div>
-
-      <label>Email</label>
-      <input id="email" type="email" placeholder="spsv3app@gmail.com"/>
-
-      <label>Senha</label>
-      <input id="pass" type="password" placeholder="••••••••"/>
-
-      <div class="row" style="margin-top:12px">
-        <button class="btn" id="btnLogin">Fazer login</button>
-        <button class="btn secondary" id="btnProfile" disabled>Buscar meu profile</button>
-        <button class="btn danger" id="btnLogout" disabled>Sair</button>
+      <div class="hero">
+        <div>
+          <h2 id="headline">Painel do Professor</h2>
+          <p id="welcomeText">Entre para carregar seu perfil e validar o sistema em produção com segurança (RLS + profiles).</p>
+        </div>
+        <div class="btns">
+          <button class="btn" id="btnOpenLogin">Entrar</button>
+          <button class="btn secondary" id="btnLoadProfile" disabled>Carregar Profile</button>
+          <button class="btn danger" id="btnLogout" disabled>Sair</button>
+        </div>
       </div>
 
-      <div id="loginStatus" class="status warn" style="margin-top:12px">
-        <pre id="loginOut">Aguardando login…</pre>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="t">Alunos ativos</div>
+          <div class="v" id="kpiStudents">—</div>
+          <div class="s">demo</div>
+        </div>
+        <div class="kpi">
+          <div class="t">Sessões semana</div>
+          <div class="v" id="kpiSessions">—</div>
+          <div class="s">demo</div>
+        </div>
+        <div class="kpi">
+          <div class="t">Carga interna</div>
+          <div class="v" id="kpiInternal">—</div>
+          <div class="s">PSR × duração</div>
+        </div>
+        <div class="kpi">
+          <div class="t">Carga externa</div>
+          <div class="v" id="kpiExternal">—</div>
+          <div class="s">volume total</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="chart">
+          <h3>RTJ / prontidão (visual demo)</h3>
+          <div class="bars" id="bars1"></div>
+          <div class="legend"><span>Seg</span><span>Dom</span></div>
+        </div>
+        <div class="chart">
+          <h3>Volume semanal (visual demo)</h3>
+          <div class="bars" id="bars2"></div>
+          <div class="legend"><span>Semana</span><span>Total</span></div>
+        </div>
+      </div>
+
+      <div class="mini">
+        <span class="chip">📌 Microciclo: 7 dias</span>
+        <span class="chip">📄 PDF: treino do dia</span>
+        <span class="chip">🧠 IA: sugestão de mesociclo (4 semanas) — próximo</span>
+        <span class="chip">🔒 Segurança: RLS + Auth</span>
       </div>
     </div>
 
+    <!-- DIREITA: DEBUG -->
     <div class="card">
-      <h2 style="margin:0 0 6px;font-size:16px">2) Resultado</h2>
-      <div class="sub">Aqui aparecem token, user_id e o profile carregado.</div>
+      <h2 style="margin:0 0 6px;font-size:14px;color:var(--muted);letter-spacing:.3px">Validação técnica</h2>
+      <div class="sub">Aqui aparecem token e o profile retornado do banco.</div>
 
-      <label>Session / Token</label>
-      <div class="status"><pre id="sessionOut">—</pre></div>
+      <div style="margin-top:10px">
+        <div class="sub">Session / Token</div>
+        <div class="status"><pre id="sessionOut">—</pre></div>
+      </div>
 
-      <label>Profile (tabela profiles)</label>
-      <div class="status"><pre id="profileOut">—</pre></div>
+      <div style="margin-top:10px">
+        <div class="sub">Profile (tabela profiles)</div>
+        <div class="status"><pre id="profileOut">—</pre></div>
+      </div>
+
+      <div id="statusBox" class="status warn" style="margin-top:12px">
+        <pre id="statusOut">Aguardando…</pre>
+      </div>
     </div>
   </div>
 
   <div class="footer">Editora Samurai — CNPJ 51.041.045/0001-45 — Todos os direitos reservados.</div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modalWrap" id="modalWrap">
+  <div class="modal">
+    <div class="modalTop">
+      <h3>ENTRAR (Supabase)</h3>
+      <button class="x" id="btnClose">Fechar</button>
+    </div>
+
+    <div class="form">
+      <div>
+        <label>Email</label>
+        <input id="email" type="email" placeholder="spsv3app@gmail.com"/>
+      </div>
+      <div>
+        <label>Senha</label>
+        <input id="pass" type="password" placeholder="••••••••"/>
+      </div>
+    </div>
+
+    <div class="btns" style="margin-top:12px">
+      <button class="btn" id="btnLogin">Fazer login</button>
+      <button class="btn secondary" id="btnProfile" disabled>Buscar meu profile</button>
+      <button class="btn danger" id="btnClear">Limpar</button>
+    </div>
+
+    <div id="loginStatus" class="status warn" style="margin-top:12px">
+      <pre id="loginOut">Aguardando login…</pre>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -91,112 +239,177 @@
   const SUPABASE_URL = "https://wubmoqobimgtmigacawp.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_8i37uX-5yQxBcj-s7QaLGQ_98O8YgeG";
 
-  document.getElementById('urlPill').textContent = SUPABASE_URL.replace('https://','');
+  document.getElementById('supUrlPill').textContent = SUPABASE_URL.replace('https://','');
 
   const els = {
-    email: document.getElementById('email'),
-    pass: document.getElementById('pass'),
-    loginOut: document.getElementById('loginOut'),
-    sessionOut: document.getElementById('sessionOut'),
-    profileOut: document.getElementById('profileOut'),
-    loginStatus: document.getElementById('loginStatus'),
+    modalWrap: document.getElementById('modalWrap'),
+    btnOpenLogin: document.getElementById('btnOpenLogin'),
+    btnClose: document.getElementById('btnClose'),
     btnLogin: document.getElementById('btnLogin'),
     btnProfile: document.getElementById('btnProfile'),
+    btnClear: document.getElementById('btnClear'),
+    btnLoadProfile: document.getElementById('btnLoadProfile'),
     btnLogout: document.getElementById('btnLogout'),
+    email: document.getElementById('email'),
+    pass: document.getElementById('pass'),
+    loginStatus: document.getElementById('loginStatus'),
+    loginOut: document.getElementById('loginOut'),
+    statusBox: document.getElementById('statusBox'),
+    statusOut: document.getElementById('statusOut'),
+    sessionOut: document.getElementById('sessionOut'),
+    profileOut: document.getElementById('profileOut'),
+    headline: document.getElementById('headline'),
+    welcomeText: document.getElementById('welcomeText'),
+    kpiStudents: document.getElementById('kpiStudents'),
+    kpiSessions: document.getElementById('kpiSessions'),
+    kpiInternal: document.getElementById('kpiInternal'),
+    kpiExternal: document.getElementById('kpiExternal'),
   };
 
-  const state = { session: null };
+  const state = { session: null, profile: null };
 
-  function setStatus(kind, text){
+  function pretty(obj){ return obj ? JSON.stringify(obj, null, 2) : "—"; }
+
+  function setBox(kind, text){
+    els.statusBox.classList.remove('ok','bad','warn');
+    els.statusBox.classList.add(kind);
+    els.statusOut.textContent = text;
+  }
+
+  function setLogin(kind, text){
     els.loginStatus.classList.remove('ok','bad','warn');
     els.loginStatus.classList.add(kind);
     els.loginOut.textContent = text;
   }
 
+  function openModal(){ els.modalWrap.style.display = 'flex'; }
+  function closeModal(){ els.modalWrap.style.display = 'none'; }
+
+  function seedBars(containerId){
+    const c = document.getElementById(containerId);
+    c.innerHTML = "";
+    const vals = Array.from({length:7}, ()=> Math.floor(25 + Math.random()*75));
+    vals.forEach(v=>{
+      const d = document.createElement('div');
+      d.className = 'bar';
+      d.style.height = v + '%';
+      c.appendChild(d);
+    });
+  }
+  seedBars('bars1'); seedBars('bars2');
+
   async function login(email, password){
     const url = `${SUPABASE_URL}/auth/v1/token?grant_type=password`;
     const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_ANON_KEY,
-        "Content-Type": "application/json"
-      },
+      method:"POST",
+      headers:{ "apikey": SUPABASE_ANON_KEY, "Content-Type":"application/json" },
       body: JSON.stringify({ email, password })
     });
     const data = await res.json().catch(()=> ({}));
-    if(!res.ok){
-      throw new Error(data?.error_description || data?.msg || JSON.stringify(data) || "Falha no login");
-    }
-    return data; // contém access_token, refresh_token, user
+    if(!res.ok) throw new Error(data?.error_description || data?.msg || JSON.stringify(data) || "Falha no login");
+    return data; // access_token, user, ...
   }
 
   async function getProfile(accessToken, userId){
     const url = `${SUPABASE_URL}/rest/v1/profiles?select=*&id=eq.${encodeURIComponent(userId)}`;
     const res = await fetch(url, {
-      headers: {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${accessToken}`
-      }
+      headers:{ "apikey": SUPABASE_ANON_KEY, "Authorization": `Bearer ${accessToken}` }
     });
     const data = await res.json().catch(()=> ({}));
-    if(!res.ok){
-      throw new Error(JSON.stringify(data) || "Falha ao buscar profile");
-    }
+    if(!res.ok) throw new Error(JSON.stringify(data) || "Falha ao buscar profile");
     return Array.isArray(data) ? (data[0] || null) : data;
   }
 
-  function pretty(obj){
-    return obj ? JSON.stringify(obj, null, 2) : "—";
+  function applyUI(){
+    const ok = !!state.session?.access_token;
+    els.btnProfile.disabled = !ok;
+    els.btnLoadProfile.disabled = !ok;
+    els.btnLogout.disabled = !ok;
+
+    els.sessionOut.textContent = ok ? pretty({
+      user_id: state.session.user?.id,
+      email: state.session.user?.email,
+      access_token_preview: (state.session.access_token||"").slice(0,25) + "…"
+    }) : "—";
+
+    els.profileOut.textContent = state.profile ? pretty(state.profile) : "—";
+
+    if(state.profile){
+      els.headline.textContent = `Bem-vindo, ${state.profile.name || 'Professor'}`;
+      els.welcomeText.textContent = `${state.profile.cref || ''} • ${state.profile.slogan || ''}`;
+      // KPIs (demo, mas já “parece vivo”)
+      els.kpiStudents.textContent = String(12);
+      els.kpiSessions.textContent = String(18);
+      els.kpiInternal.textContent = String(540);
+      els.kpiExternal.textContent = String(12750);
+      setBox('ok', 'Sistema validado ✅ (Auth + profiles)');
+    }else{
+      els.headline.textContent = 'Painel do Professor';
+      els.welcomeText.textContent = 'Entre para carregar seu perfil e validar o sistema em produção com segurança (RLS + profiles).';
+      els.kpiStudents.textContent = '—';
+      els.kpiSessions.textContent = '—';
+      els.kpiInternal.textContent = '—';
+      els.kpiExternal.textContent = '—';
+      setBox('warn', ok ? 'Login OK. Falta carregar o profile.' : 'Aguardando…');
+    }
   }
+
+  // Eventos
+  els.btnOpenLogin.addEventListener('click', openModal);
+  els.btnClose.addEventListener('click', closeModal);
+  els.modalWrap.addEventListener('click', (e)=>{ if(e.target===els.modalWrap) closeModal(); });
 
   els.btnLogin.addEventListener('click', async ()=>{
     try{
-      setStatus('warn', 'Fazendo login…');
-      els.profileOut.textContent = "—";
+      setLogin('warn', 'Fazendo login…');
       const email = els.email.value.trim();
       const password = els.pass.value;
-      if(!email || !password) return setStatus('bad', 'Preencha email e senha.');
+      if(!email || !password) return setLogin('bad','Preencha email e senha.');
       const sess = await login(email, password);
       state.session = sess;
-      els.sessionOut.textContent = pretty({
-        user_id: sess.user?.id,
-        email: sess.user?.email,
-        access_token_preview: (sess.access_token || '').slice(0, 25) + '…'
-      });
-      els.btnProfile.disabled = false;
-      els.btnLogout.disabled = false;
-      setStatus('ok', 'Login OK ✅');
+      state.profile = null;
+      setLogin('ok','Login OK ✅');
+      applyUI();
     }catch(e){
-      state.session = null;
-      els.sessionOut.textContent = "—";
-      els.btnProfile.disabled = true;
-      els.btnLogout.disabled = true;
-      setStatus('bad', 'Erro: ' + (e?.message || e));
+      state.session = null; state.profile = null;
+      setLogin('bad','Erro: ' + (e?.message || e));
+      applyUI();
     }
   });
 
-  els.btnProfile.addEventListener('click', async ()=>{
-    try{
-      if(!state.session?.access_token || !state.session?.user?.id) return setStatus('bad','Faça login primeiro.');
-      setStatus('warn', 'Buscando profile…');
-      const prof = await getProfile(state.session.access_token, state.session.user.id);
-      els.profileOut.textContent = pretty(prof);
-      setStatus('ok', prof ? 'Profile carregado ✅' : 'Profile não encontrado (tabela profiles vazia para este usuário).');
-    }catch(e){
-      setStatus('bad', 'Erro ao buscar profile: ' + (e?.message || e));
+  async function loadProfile(){
+    if(!state.session?.access_token || !state.session?.user?.id){
+      setBox('bad','Faça login primeiro.');
+      return;
     }
-  });
+    try{
+      setBox('warn','Carregando profile…');
+      const prof = await getProfile(state.session.access_token, state.session.user.id);
+      state.profile = prof;
+      applyUI();
+      closeModal();
+    }catch(e){
+      setBox('bad','Erro ao buscar profile: ' + (e?.message || e));
+    }
+  }
+
+  els.btnProfile.addEventListener('click', loadProfile);
+  els.btnLoadProfile.addEventListener('click', loadProfile);
 
   els.btnLogout.addEventListener('click', ()=>{
-    state.session = null;
-    els.sessionOut.textContent = "—";
-    els.profileOut.textContent = "—";
-    els.btnProfile.disabled = true;
-    els.btnLogout.disabled = true;
-    setStatus('warn', 'Sessão limpa. (Logout local)');
+    state.session = null; state.profile = null;
+    setBox('warn','Sessão limpa.');
+    applyUI();
   });
 
+  els.btnClear.addEventListener('click', ()=>{
+    els.pass.value = '';
+    setLogin('warn','Aguardando login…');
+  });
+
+  // Pré-preenche email
   els.email.value = "spsv3app@gmail.com";
+  applyUI();
 </script>
 </body>
 </html>

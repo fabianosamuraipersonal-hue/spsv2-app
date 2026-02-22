@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SPSV2 • Teste de Login (Supabase)</title>
+  <style>
+    :root{--bg:#0b0f14;--card:#101826;--muted:#8aa0b6;--text:#e9f0f7;--ok:#2ee59d;--warn:#ffcc66;--bad:#ff5c77;--line:rgba(255,255,255,.08)}
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
+    body{margin:0;background:radial-gradient(900px 600px at 20% 10%, rgba(100,200,255,.14), transparent 60%),
+         radial-gradient(900px 600px at 80% 30%, rgba(46,229,157,.12), transparent 60%),
+         var(--bg);color:var(--text)}
+    .wrap{max-width:980px;margin:0 auto;padding:22px}
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    h1{margin:0;font-size:20px;letter-spacing:.3px}
+    .sub{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;margin-top:16px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+          border:1px solid var(--line);border-radius:18px;padding:16px;backdrop-filter: blur(10px)}
+    label{display:block;color:var(--muted);font-size:12px;margin:10px 0 6px}
+    input{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);
+          background:rgba(0,0,0,.25);color:var(--text);outline:none}
+    input:focus{border-color:rgba(46,229,157,.35)}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{padding:12px 14px;border-radius:12px;border:1px solid var(--line);
+         background:rgba(46,229,157,.12);color:var(--text);cursor:pointer;font-weight:650}
+    .btn:hover{border-color:rgba(46,229,157,.35)}
+    .btn.secondary{background:rgba(100,200,255,.12)}
+    .btn.danger{background:rgba(255,92,119,.12)}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;
+          border:1px solid var(--line);color:var(--muted);font-size:12px}
+    pre{white-space:pre-wrap;word-break:break-word;margin:0;color:#d8e6f4;font-size:12px;line-height:1.35}
+    .status{margin-top:10px;padding:10px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.25)}
+    .ok{border-color:rgba(46,229,157,.35)}
+    .bad{border-color:rgba(255,92,119,.35)}
+    .warn{border-color:rgba(255,204,102,.35)}
+    .footer{margin-top:14px;color:var(--muted);font-size:12px;text-align:center}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>SPSV2 • Teste de Login (Supabase)</h1>
+      <div class="sub">Use este arquivo só para validar: login (email/senha) + leitura do perfil em <span class="mono">profiles</span>.</div>
+    </div>
+    <div class="pill">✅ URL: <span class="mono" id="urlPill"></span></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2 style="margin:0 0 6px;font-size:16px">1) Entrar</h2>
+      <div class="sub">Digite o email/senha do usuário que você criou no Supabase.</div>
+
+      <label>Email</label>
+      <input id="email" type="email" placeholder="spsv3app@gmail.com"/>
+
+      <label>Senha</label>
+      <input id="pass" type="password" placeholder="••••••••"/>
+
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="btnLogin">Fazer login</button>
+        <button class="btn secondary" id="btnProfile" disabled>Buscar meu profile</button>
+        <button class="btn danger" id="btnLogout" disabled>Sair</button>
+      </div>
+
+      <div id="loginStatus" class="status warn" style="margin-top:12px">
+        <pre id="loginOut">Aguardando login…</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 6px;font-size:16px">2) Resultado</h2>
+      <div class="sub">Aqui aparecem token, user_id e o profile carregado.</div>
+
+      <label>Session / Token</label>
+      <div class="status"><pre id="sessionOut">—</pre></div>
+
+      <label>Profile (tabela profiles)</label>
+      <div class="status"><pre id="profileOut">—</pre></div>
+    </div>
+  </div>
+
+  <div class="footer">Editora Samurai — CNPJ 51.041.045/0001-45 — Todos os direitos reservados.</div>
+</div>
+
+<script>
+  // ✅ Credenciais do seu projeto
+  const SUPABASE_URL = "https://wubmoqobimgtmigacawp.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_8i37uX-5yQxBcj-s7QaLGQ_98O8YgeG";
+
+  document.getElementById('urlPill').textContent = SUPABASE_URL.replace('https://','');
+
+  const els = {
+    email: document.getElementById('email'),
+    pass: document.getElementById('pass'),
+    loginOut: document.getElementById('loginOut'),
+    sessionOut: document.getElementById('sessionOut'),
+    profileOut: document.getElementById('profileOut'),
+    loginStatus: document.getElementById('loginStatus'),
+    btnLogin: document.getElementById('btnLogin'),
+    btnProfile: document.getElementById('btnProfile'),
+    btnLogout: document.getElementById('btnLogout'),
+  };
+
+  const state = { session: null };
+
+  function setStatus(kind, text){
+    els.loginStatus.classList.remove('ok','bad','warn');
+    els.loginStatus.classList.add(kind);
+    els.loginOut.textContent = text;
+  }
+
+  async function login(email, password){
+    const url = `${SUPABASE_URL}/auth/v1/token?grant_type=password`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json().catch(()=> ({}));
+    if(!res.ok){
+      throw new Error(data?.error_description || data?.msg || JSON.stringify(data) || "Falha no login");
+    }
+    return data; // contém access_token, refresh_token, user
+  }
+
+  async function getProfile(accessToken, userId){
+    const url = `${SUPABASE_URL}/rest/v1/profiles?select=*&id=eq.${encodeURIComponent(userId)}`;
+    const res = await fetch(url, {
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${accessToken}`
+      }
+    });
+    const data = await res.json().catch(()=> ({}));
+    if(!res.ok){
+      throw new Error(JSON.stringify(data) || "Falha ao buscar profile");
+    }
+    return Array.isArray(data) ? (data[0] || null) : data;
+  }
+
+  function pretty(obj){
+    return obj ? JSON.stringify(obj, null, 2) : "—";
+  }
+
+  els.btnLogin.addEventListener('click', async ()=>{
+    try{
+      setStatus('warn', 'Fazendo login…');
+      els.profileOut.textContent = "—";
+      const email = els.email.value.trim();
+      const password = els.pass.value;
+      if(!email || !password) return setStatus('bad', 'Preencha email e senha.');
+      const sess = await login(email, password);
+      state.session = sess;
+      els.sessionOut.textContent = pretty({
+        user_id: sess.user?.id,
+        email: sess.user?.email,
+        access_token_preview: (sess.access_token || '').slice(0, 25) + '…'
+      });
+      els.btnProfile.disabled = false;
+      els.btnLogout.disabled = false;
+      setStatus('ok', 'Login OK ✅');
+    }catch(e){
+      state.session = null;
+      els.sessionOut.textContent = "—";
+      els.btnProfile.disabled = true;
+      els.btnLogout.disabled = true;
+      setStatus('bad', 'Erro: ' + (e?.message || e));
+    }
+  });
+
+  els.btnProfile.addEventListener('click', async ()=>{
+    try{
+      if(!state.session?.access_token || !state.session?.user?.id) return setStatus('bad','Faça login primeiro.');
+      setStatus('warn', 'Buscando profile…');
+      const prof = await getProfile(state.session.access_token, state.session.user.id);
+      els.profileOut.textContent = pretty(prof);
+      setStatus('ok', prof ? 'Profile carregado ✅' : 'Profile não encontrado (tabela profiles vazia para este usuário).');
+    }catch(e){
+      setStatus('bad', 'Erro ao buscar profile: ' + (e?.message || e));
+    }
+  });
+
+  els.btnLogout.addEventListener('click', ()=>{
+    state.session = null;
+    els.sessionOut.textContent = "—";
+    els.profileOut.textContent = "—";
+    els.btnProfile.disabled = true;
+    els.btnLogout.disabled = true;
+    setStatus('warn', 'Sessão limpa. (Logout local)');
+  });
+
+  els.email.value = "spsv3app@gmail.com";
+</script>
+</body>
+</html>

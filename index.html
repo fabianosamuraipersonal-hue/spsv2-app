@@ -43,7 +43,7 @@
     /* Layout */
     .app{min-height:100%; display:flex; gap:14px; padding:16px}
     .sidebar{
-      width:280px; min-width:260px;
+      width:290px; min-width:270px;
       background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--line);
       border-radius:20px;
@@ -53,7 +53,13 @@
       position:sticky; top:16px; height:calc(100vh - 32px);
       display:flex; flex-direction:column; gap:12px;
     }
-    .main{flex:1; display:flex; flex-direction:column; gap:14px; min-width:320px;}
+    .main{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      min-width: 320px;
+    }
     .topbar{
       background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--line);
@@ -75,19 +81,19 @@
 
     /* Sidebar */
     .brand{display:flex; align-items:center; gap:10px}
-    .logoWrap{
-      width:44px;height:44px;border-radius:999px; /* ✅ circular */
+    .brandLeft{display:flex; align-items:center; gap:10px; min-width:0}
+    .avatar{
+      width:42px;height:42px;border-radius:999px; /* ✅ circular */
+      background:linear-gradient(135deg, rgba(100,200,255,.35), rgba(46,229,157,.25));
       border:1px solid var(--line);
       box-shadow:0 10px 30px rgba(0,0,0,.30);
       overflow:hidden;
-      background:linear-gradient(135deg, rgba(100,200,255,.35), rgba(46,229,157,.25));
-      display:flex; align-items:center; justify-content:center;
       flex:0 0 auto;
     }
-    .logoImg{width:100%; height:100%; object-fit:cover; display:block;}
-    .logoFallback{width:18px; height:18px; border-radius:999px; background:rgba(255,255,255,.18)}
+    .avatar img{width:100%; height:100%; object-fit:cover; display:block}
+    .brandText{min-width:0}
     .brand h1{margin:0; font-size:14px; letter-spacing:.5px}
-    .brand .sub{margin:0; color:var(--muted); font-size:12px}
+    .brand .sub{margin:0; color:var(--muted); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
     .badge{
       margin-left:auto;
       display:inline-flex; align-items:center; gap:8px;
@@ -102,6 +108,7 @@
     .dot{width:9px;height:9px;border-radius:9px;background:var(--warn); box-shadow:0 0 0 4px rgba(255,198,110,.12)}
     .dot.ok{background:var(--ok); box-shadow:0 0 0 4px rgba(46,229,157,.12)}
     .dot.bad{background:var(--bad); box-shadow:0 0 0 4px rgba(255,92,119,.12)}
+
     .nav{display:flex; flex-direction:column; gap:6px; margin-top:6px}
     .nav button{
       width:100%;
@@ -137,6 +144,10 @@
       border-radius:999px;
       font-size:12px;
       color:var(--muted);
+      max-width: 100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
     }
 
     /* UI atoms */
@@ -147,6 +158,7 @@
       .content{min-height:auto}
       .app{padding:10px}
     }
+
     .card{
       background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid var(--line);
@@ -194,6 +206,7 @@
       border-radius:14px;
       color:var(--warn);
       font-size:13px;
+      overflow-wrap:anywhere;
     }
     .status.ok{border-color:rgba(46,229,157,.25); background:rgba(46,229,157,.08); color:var(--ok)}
     .status.bad{border-color:rgba(255,92,119,.25); background:rgba(255,92,119,.08); color:var(--bad)}
@@ -231,7 +244,7 @@
       z-index:9999;
     }
     .modal{
-      width:min(920px, 100%);
+      width:min(900px, 100%);
       background:linear-gradient(180deg, rgba(15,22,34,.96), rgba(10,14,20,.92));
       border:1px solid var(--line);
       border-radius:22px;
@@ -249,15 +262,6 @@
       font-size:12px;
       padding:10px 0 4px;
     }
-    .hint{
-      border:1px solid rgba(100,200,255,.18);
-      background:rgba(100,200,255,.06);
-      padding:10px 12px;
-      border-radius:14px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.55;
-    }
   </style>
 </head>
 
@@ -265,14 +269,16 @@
   <div class="app">
     <aside class="sidebar">
       <div class="brand">
-        <div class="logoWrap" title="Logo/Avatar (circular)">
-          <img id="brandLogoImg" class="logoImg" alt="Logo" style="display:none" />
-          <div id="brandLogoFallback" class="logoFallback" aria-hidden="true"></div>
+        <div class="brandLeft">
+          <div class="avatar" aria-hidden="true" id="avatarBox">
+            <!-- avatar_url (profiles) vai aqui -->
+          </div>
+          <div class="brandText">
+            <h1>SPSV2</h1>
+            <p class="sub" id="brandSub">Personal na Palma da Sua Mão</p>
+          </div>
         </div>
-        <div>
-          <h1>SPSV2</h1>
-          <p class="sub">Personal na Palma da Sua Mão</p>
-        </div>
+
         <div class="badge" title="Status do Supabase e sessão">
           <span id="dot" class="dot"></span>
           <span id="badgeText">Desconectado</span>
@@ -334,7 +340,7 @@
       </div>
       <div class="modalBody">
         <p class="muted" style="margin:0 0 10px 0">
-          Cole aqui a URL do seu projeto e a <b>Publishable key (sb_publishable_...)</b>. Isso fica salvo no seu navegador (localStorage).
+          Cole aqui a URL do seu projeto e a <b>Anon Key (Publishable key)</b>. Isso fica salvo no seu navegador (localStorage).
         </p>
         <div class="row">
           <div>
@@ -342,7 +348,7 @@
             <input id="cfgUrl" placeholder="https://xxxxx.supabase.co" />
           </div>
           <div>
-            <label>SUPABASE_ANON_KEY (publishable)</label>
+            <label>SUPABASE_ANON_KEY (Publishable key)</label>
             <input id="cfgKey" placeholder="sb_publishable_..." />
           </div>
         </div>
@@ -351,14 +357,17 @@
           <button class="btn" id="btnTestConn">Testar conexão</button>
           <button class="btn bad" id="btnClearConfig">Limpar</button>
         </div>
-        <div id="cfgStatus" class="status">Cole sua URL e Publishable key para habilitar o app.</div>
+        <div id="cfgStatus" class="status">Cole sua URL e Anon Key para habilitar o app.</div>
 
         <div class="hr"></div>
         <details>
-          <summary style="cursor:pointer; color:var(--muted)">Observação de segurança (RLS) — leitura rápida</summary>
+          <summary style="cursor:pointer; color:var(--muted)">Mapa rápido do seu schema (padrão atual)</summary>
           <div style="margin-top:10px; color:var(--muted); font-size:13px; line-height:1.5">
-            <div><b>Padrão SPS:</b> tabelas têm <span class="mono">user_id uuid</span> (dono) + RLS por usuário.</div>
-            <div>Se o app reclamar de coluna faltando, ajustamos o schema com segurança (sem pressa).</div>
+            <div><b>Tabelas:</b> profiles, students, sessions, exercises, session_items</div>
+            <div><b>Chaves:</b> profiles.id = auth.users.id</div>
+            <div><b>Sessions:</b> usa <span class="mono">session_date</span> (date) + <span class="mono">status</span></div>
+            <div><b>Exercises:</b> usa <span class="mono">group_name</span></div>
+            <div><b>Session items:</b> sets / reps / load / rpe / notes</div>
           </div>
         </details>
       </div>
@@ -374,76 +383,118 @@
       </div>
       <div class="modalBody" style="color:var(--muted); font-size:13px; line-height:1.55">
         <p style="margin-top:0">
-          <b>1)</b> Abra <span class="mono">Config</span> e cole <b>SUPABASE_URL</b> + <b>Publishable key</b>.<br>
-          <b>2)</b> Faça login (email/senha).<br>
-          <b>3)</b> Cadastre alunos → crie sessões → adicione itens (exercícios) → exporte CSV.
+          <b>Fluxo V1:</b> Config → Login → Alunos → Sessões → Itens (exercícios) → Relatórios.
         </p>
-        <div class="hint">
-          <b>Métodos especiais (regressivos):</b><br>
-          Em “Itens da sessão”, você pode registrar o <b>Método</b> e a <b>Prescrição</b> em texto (ex.: “4×12-10-8”, “60-55-50kg”, “90-60-45s”).<br>
-          Se você quiser padronizar isso no banco (colunas), eu travo o schema e evoluímos.
-        </div>
+        <p>
+          <b>Se aparecer “Could not find the 'X' column …”</b>: seu banco não tem essa coluna.
+          Este app tenta se adaptar automaticamente, mas se você estiver criando colunas manualmente,
+          mantenha os nomes assim: <span class="mono">goal</span>, <span class="mono">status</span>, <span class="mono">session_date</span>, <span class="mono">group_name</span>.
+        </p>
+        <p>
+          <b>Treinos especiais (regressivos):</b> nos Itens da sessão você tem um campo <span class="mono">Método</span> e um campo <span class="mono">Esquema</span>.
+          Se o banco ainda não tiver essas colunas, o sistema salva no <span class="mono">notes</span> automaticamente.
+        </p>
       </div>
     </div>
   </div>
 
   <script>
     /*****************************************************************
-     * SPSV2 — Painel Completo (Single-file)
-     * - GitHub Pages + Supabase (REST)
-     * - Login/Logout
-     * - CRUD: profiles, students, sessions, exercises, session_items
-     * - CSV export
+     * SPSV2 — Personal na Palma da Sua Mão (Single-file)
      *
-     * ✅ Fix crítico: helper el() aceita números/null (evita appendChild bug)
-     * ✅ Logo/Avatar circular (perfil)
-     * ✅ Compatibilidade: tenta inserir com colunas extras e remove as inexistentes
-     * ✅ Schema esperado (compatível com seus prints):
-     *    - profiles: id(uuid pk -> auth.users.id), name, cref, slogan, avatar_url, logo_url, created_at, updated_at
-     *    - students: id, user_id, name, goal, notes, created_at, updated_at
-     *    - exercises: id, user_id, name, group_name, created_at, updated_at
-     *    - sessions: id, user_id, student_id, title, status, session_date (date), notes, created_at, updated_at
-     *    - session_items: id, user_id, session_id, exercise_id, sets, reps, load, rpe, notes, created_at
+     * ✅ Correções principais desta versão:
+     * 1) FUNÇÃO el() “à prova de bug”:
+     *    - Converte números/booleans em texto automaticamente.
+     *    - Isso resolve o erro: appendChild parameter 1 is not of type Node
+     *
+     * 2) Alinhamento com seu schema real (prints):
+     *    - students.goal
+     *    - sessions.session_date (date) + sessions.status
+     *    - exercises.group_name
+     *    - session_items (já existe e contém sets/reps/load/rpe/notes)
+     *
+     * 3) Itens da sessão com Método/Esquema (para regressivos):
+     *    - Se existirem colunas method/scheme no banco, salvamos nelas.
+     *    - Se NÃO existirem, colocamos dentro de notes automaticamente.
+     *
+     * 4) Avatar/Logo:
+     *    - Avatar circular (não oval) ✅
+     *    - Se profiles.avatar_url existir, mostra na sidebar.
      *****************************************************************/
 
-    /* =========================
-       0) Config (localStorage)
-    ========================= */
+    /* ===============================================================
+       0) CONFIG (URL/ANON) — salva no navegador
+    =============================================================== */
     const LS = {
       url: "SPSV2_SUPABASE_URL",
       key: "SPSV2_SUPABASE_ANON",
       lastView: "SPSV2_LAST_VIEW",
     };
 
+    const TABLES = {
+      profiles: "profiles",
+      students: "students",
+      sessions: "sessions",
+      exercises: "exercises",
+      items: "session_items",
+    };
+
+    // Colunas (alinhadas com o que você já criou)
+    const COL = {
+      profiles: { id:"id", name:"name", cref:"cref", slogan:"slogan", avatar_url:"avatar_url", logo_url:"logo_url" },
+      students: { id:"id", user_id:"user_id", name:"name", goal:"goal", notes:"notes", created_at:"created_at" },
+      sessions: { id:"id", user_id:"user_id", student_id:"student_id", title:"title", status:"status", session_date:"session_date", notes:"notes", created_at:"created_at" },
+      exercises:{ id:"id", user_id:"user_id", name:"name", group_name:"group_name", notes:"notes", created_at:"created_at" },
+      items:   { id:"id", user_id:"user_id", session_id:"session_id", exercise_id:"exercise_id", sets:"sets", reps:"reps", load:"load", rpe:"rpe", notes:"notes",
+                 // opcionais para “métodos regressivos”
+                 method:"method", scheme:"scheme"
+               },
+    };
+
     const state = {
       sbUrl: localStorage.getItem(LS.url) || "",
       sbKey: localStorage.getItem(LS.key) || "",
-      session: null,      // { access_token, user }
-      profile: null,
+      session: null,      // { access_token, user: { id, email } }
+      profile: null,      // row from profiles
       view: localStorage.getItem(LS.lastView) || "dashboard",
-      cache: { students: [], sessions: [], exercises: [] },
       loading: false,
+      cache: { students: [], sessions: [], exercises: [] },
     };
 
-    /* =========================
-       1) Utilidades
-    ========================= */
+    /* ===============================================================
+       1) UTILIDADES (DOM, datas, etc.)
+    =============================================================== */
     const $ = (sel) => document.querySelector(sel);
 
-    // ✅ FIX: aceita string/number/null/Node
-    const el = (tag, attrs={}, children=[]) => {
+    // ✅ el() “à prova de bug”
+    // - Não quebra com número/boolean/null
+    // - Aceita arrays de filhos
+    const el = (tag, attrs = {}, children = []) => {
       const n = document.createElement(tag);
-      for (const [k,v] of Object.entries(attrs)){
+
+      for (const [k, v] of Object.entries(attrs || {})) {
         if (k === "class") n.className = v;
         else if (k === "html") n.innerHTML = v;
         else if (k.startsWith("on") && typeof v === "function") n.addEventListener(k.slice(2), v);
-        else n.setAttribute(k, v);
+        else if (v !== null && v !== undefined) n.setAttribute(k, v);
       }
-      (children||[]).forEach(c => {
+
+      (children || []).forEach((c) => {
         if (c === null || c === undefined) return;
-        if (c instanceof Node) n.appendChild(c);
-        else n.appendChild(document.createTextNode(String(c)));
+
+        if (c instanceof Node) { n.appendChild(c); return; }
+
+        if (Array.isArray(c)) {
+          c.forEach((cc) => {
+            if (cc === null || cc === undefined) return;
+            n.appendChild(cc instanceof Node ? cc : document.createTextNode(String(cc)));
+          });
+          return;
+        }
+
+        n.appendChild(document.createTextNode(String(c)));
       });
+
       return n;
     };
 
@@ -461,10 +512,12 @@
 
     const fmtDateOnly = (yyyy_mm_dd) => {
       if (!yyyy_mm_dd) return "—";
-      // mantém como string (evita timezone)
-      const [y,m,d] = String(yyyy_mm_dd).split("-");
-      if (!y || !m || !d) return String(yyyy_mm_dd);
-      return `${d}/${m}/${y}`;
+      // se vier ISO, pega só data
+      const s = String(yyyy_mm_dd);
+      const d = s.length >= 10 ? s.slice(0,10) : s;
+      const parts = d.split("-");
+      if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      return d;
     };
 
     const uidShort = (uid) => uid ? (uid.slice(0,8)+"…"+uid.slice(-4)) : "—";
@@ -478,23 +531,6 @@
       badgeText.textContent = text;
     };
 
-    const setEnvTag = () => {
-      const isGh = location.host.includes("github.io") || location.host.includes("spsv3.com.br");
-      $("#tagEnv").textContent = isGh ? "Web" : "Web";
-      try{
-        $("#sbHost").textContent = state.sbUrl ? (new URL(state.sbUrl).host) : "supabase";
-      }catch{
-        $("#sbHost").textContent = "supabase";
-      }
-    };
-
-    const setView = (view) => {
-      state.view = view;
-      localStorage.setItem(LS.lastView, view);
-      document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("active", b.dataset.view === view));
-      render();
-    };
-
     const openModal = (id) => { $("#"+id).style.display = "flex"; };
     const closeModal = (id) => { $("#"+id).style.display = "none"; };
 
@@ -505,13 +541,35 @@
       if (navBtn) setView(navBtn.dataset.view);
     });
 
-    $("#btnQuickHelp").addEventListener("click", () => openModal("helpModal"));
-    $("#btnOpenConfig").addEventListener("click", () => {
-      $("#cfgUrl").value = state.sbUrl || "";
-      $("#cfgKey").value = state.sbKey || "";
-      cfgStatus("Cole a URL e a Publishable key e clique em Salvar.", "warn");
-      openModal("configModal");
-    });
+    function setEnvTag() {
+      const isGh = location.host.includes("github.io");
+      $("#tagEnv").textContent = isGh ? "GitHub Pages" : "Web";
+      $("#sbHost").textContent = state.sbUrl ? (new URL(state.sbUrl).host) : "supabase";
+    }
+
+    function setView(view) {
+      state.view = view;
+      localStorage.setItem(LS.lastView, view);
+      document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+      render();
+    }
+
+    function mustConfig(){ return !!(state.sbUrl && state.sbKey); }
+
+    function syncBadge(){
+      if (!mustConfig()){
+        setBadge("warn","Sem configuração");
+        $("#uidShort").textContent = "—";
+        return;
+      }
+      if (state.session?.user?.id){
+        setBadge("ok","Autenticado");
+        $("#uidShort").textContent = uidShort(state.session.user.id);
+      } else {
+        setBadge("warn","Pronto p/ login");
+        $("#uidShort").textContent = "—";
+      }
+    }
 
     function cfgStatus(msg, type="warn"){
       const box = $("#cfgStatus");
@@ -521,63 +579,19 @@
       box.textContent = msg;
     }
 
-    $("#btnSaveConfig").addEventListener("click", () => {
-      const url = $("#cfgUrl").value.trim();
-      const key = $("#cfgKey").value.trim();
-      if (!url || !key){
-        cfgStatus("Faltou preencher URL e/ou Publishable key.", "bad");
-        return;
-      }
-      state.sbUrl = url;
-      state.sbKey = key;
-      localStorage.setItem(LS.url, url);
-      localStorage.setItem(LS.key, key);
-      setEnvTag();
-      cfgStatus("Config salvo. Clique em Testar conexão e depois feche.", "ok");
-    });
-
-    $("#btnClearConfig").addEventListener("click", () => {
-      localStorage.removeItem(LS.url);
-      localStorage.removeItem(LS.key);
-      state.sbUrl = "";
-      state.sbKey = "";
-      state.session = null;
-      state.profile = null;
-      $("#btnLogout").disabled = true;
-      setEnvTag();
-      setBadge("warn","Sem configuração");
-      $("#uidShort").textContent = "—";
-      applyBrandLogo(null);
-      cfgStatus("Config limpo. Cole novamente para usar o app.", "warn");
-      render();
-    });
-
-    $("#btnTestConn").addEventListener("click", async () => {
-      if (!state.sbUrl || !state.sbKey){
-        cfgStatus("Sem URL/Publishable key. Salve primeiro.", "bad");
-        return;
-      }
-      cfgStatus("Testando conexão…", "warn");
-      try{
-        const res = await fetch(state.sbUrl + "/rest/v1/", {
-          headers: { apikey: state.sbKey, Authorization: "Bearer " + state.sbKey }
-        });
-        (void res);
-        cfgStatus("Conexão OK (servidor respondeu).", "ok");
-      }catch(err){
-        cfgStatus("Falha ao conectar. Verifique URL/Publishable key.", "bad");
-      }
-    });
-
-    /* =========================
-       2) Supabase REST
-    ========================= */
-    function mustConfig(){ return !!(state.sbUrl && state.sbKey); }
-
+    /* ===============================================================
+       2) SUPABASE (REST + AUTH) — sem libs
+    =============================================================== */
     function sbHeaders(withAuth=true){
-      const h = { apikey: state.sbKey, "Content-Type": "application/json" };
-      if (withAuth && state.session?.access_token) h.Authorization = "Bearer " + state.session.access_token;
-      else h.Authorization = "Bearer " + state.sbKey;
+      const h = {
+        apikey: state.sbKey,
+        "Content-Type": "application/json",
+      };
+      if (withAuth && state.session?.access_token){
+        h.Authorization = "Bearer " + state.session.access_token;
+      } else {
+        h.Authorization = "Bearer " + state.sbKey;
+      }
       return h;
     }
 
@@ -585,7 +599,7 @@
       const url = state.sbUrl + "/auth/v1/token?grant_type=password";
       const res = await fetch(url, {
         method:"POST",
-        headers:{ apikey: state.sbKey, "Content-Type":"application/json" },
+        headers: { apikey: state.sbKey, "Content-Type":"application/json" },
         body: JSON.stringify({ email, password })
       });
       const data = await safeJson(res);
@@ -608,12 +622,9 @@
       state.session = null;
       state.profile = null;
       $("#btnLogout").disabled = true;
-      applyBrandLogo(null);
       syncBadge();
       render();
     }
-
-    $("#btnLogout").addEventListener("click", sbLogout);
 
     async function sbSelect(table, query=""){
       const url = state.sbUrl + "/rest/v1/" + table + (query ? ("?" + query) : "");
@@ -657,115 +668,119 @@
       return true;
     }
 
-    // ✅ super-robusto: tenta com user_id e com colunas extras; se faltar coluna, remove e tenta de novo
+    // Insert “inteligente”: tenta com user_id e remove colunas inexistentes automaticamente
     function withUserId(obj){
-      return { ...obj, user_id: state.session?.user?.id };
+      const uid = state.session?.user?.id;
+      if (!uid) return { ...obj };
+      // Se sua tabela tiver user_id, isso ajuda o RLS.
+      return { ...obj, user_id: uid };
     }
 
-    function parseMissingColumn(msg){
-      // exemplos comuns:
-      // "Could not find the 'goal' column of 'students' in the schema cache"
-      // "column \"sets\" of relation \"session_items\" already exists" (não é missing)
-      // "column \"xyz\" does not exist"
+    function extractMissingColumn(msg){
+      // Erros comuns:
+      // 1) Could not find the 'goal' column of 'students' in the schema cache
       const m1 = msg.match(/Could not find the '([^']+)' column/i);
-      if (m1?.[1]) return m1[1];
-      const m2 = msg.match(/column "?([a-zA-Z0-9_]+)"? does not exist/i);
-      if (m2?.[1]) return m2[1];
+      if (m1 && m1[1]) return m1[1];
+
+      // 2) column "sets" of relation "session_items" does not exist
+      const m2 = msg.match(/column "([^"]+)" of relation/i);
+      if (m2 && m2[1]) return m2[1];
+
       return null;
     }
 
-    async function insertUltraSafe(table, obj){
-      let payload = withUserId(obj);
-      // tentativas: remove colunas que não existem
-      for (let i=0; i<8; i++){
+    async function insertSmart(table, payload){
+      // 1) tenta com user_id
+      let obj = withUserId(payload);
+
+      // 2) tenta remover colunas inexistentes (até 6 tentativas)
+      for (let i=0; i<6; i++){
         try{
-          return await sbInsert(table, payload);
+          return await sbInsert(table, obj);
         }catch(e){
           const msg = String(e?.message || "");
-          const col = parseMissingColumn(msg);
-          if (col && Object.prototype.hasOwnProperty.call(payload, col)){
-            const { [col]:_, ...rest } = payload;
-            payload = rest;
+          const col = extractMissingColumn(msg);
+
+          // se erro for user_id não existente -> remove e tenta de novo
+          if (col && Object.prototype.hasOwnProperty.call(obj, col)){
+            const clone = { ...obj };
+            delete clone[col];
+            obj = clone;
             continue;
           }
-          // fallback: se reclamar de user_id inexistente, tenta sem user_id
-          if (msg.includes("user_id") && msg.includes("Could not find")){
-            const { user_id, ...rest } = payload;
-            payload = rest;
+
+          // se não conseguimos corrigir automaticamente, explode
+          throw e;
+        }
+      }
+      return await sbInsert(table, obj);
+    }
+
+    async function updateSmart(table, matchQuery, patch){
+      // update também: remove colunas inexistentes se acontecer
+      let obj = { ...patch };
+      for (let i=0; i<6; i++){
+        try{
+          return await sbUpdate(table, matchQuery, obj);
+        }catch(e){
+          const msg = String(e?.message || "");
+          const col = extractMissingColumn(msg);
+          if (col && Object.prototype.hasOwnProperty.call(obj, col)){
+            const clone = { ...obj };
+            delete clone[col];
+            obj = clone;
             continue;
           }
           throw e;
         }
       }
-      throw new Error("Falha ao inserir (muitas colunas ausentes).");
+      return await sbUpdate(table, matchQuery, obj);
     }
 
-    async function updateUltraSafe(table, matchQuery, patch){
-      let payload = { ...patch };
-      for (let i=0; i<8; i++){
-        try{
-          return await sbUpdate(table, matchQuery, payload);
-        }catch(e){
-          const msg = String(e?.message || "");
-          const col = parseMissingColumn(msg);
-          if (col && Object.prototype.hasOwnProperty.call(payload, col)){
-            const { [col]:_, ...rest } = payload;
-            payload = rest;
-            continue;
-          }
-          throw e;
-        }
-      }
-      throw new Error("Falha ao atualizar (muitas colunas ausentes).");
-    }
-
-    function syncBadge(){
-      const hasCfg = mustConfig();
-      if (!hasCfg){
-        setBadge("warn","Sem configuração");
-        $("#uidShort").textContent = "—";
-        return;
-      }
-      if (state.session?.user?.id){
-        setBadge("ok","Autenticado");
-        $("#uidShort").textContent = uidShort(state.session.user.id);
-      }else{
-        setBadge("warn","Pronto p/ login");
-        $("#uidShort").textContent = "—";
-      }
-    }
-
-    /* =========================
-       3) Loaders
-    ========================= */
+    /* ===============================================================
+       3) CARREGAMENTO / CACHE
+    =============================================================== */
     async function loadProfile(){
       if (!state.session?.user?.id) return null;
       const uid = state.session.user.id;
-      const rows = await sbSelect("profiles", `select=*&id=eq.${encodeURIComponent(uid)}&limit=1`);
+      const rows = await sbSelect(TABLES.profiles, `select=*&${COL.profiles.id}=eq.${encodeURIComponent(uid)}&limit=1`);
       state.profile = rows?.[0] || null;
-      applyBrandLogo(state.profile);
+
+      // aplica avatar
+      applyAvatarFromProfile();
       return state.profile;
     }
 
+    function applyAvatarFromProfile(){
+      const box = $("#avatarBox");
+      box.innerHTML = "";
+      const url = state.profile?.[COL.profiles.avatar_url];
+      if (url){
+        box.appendChild(el("img", { src:url, alt:"Avatar" }));
+      }
+      const slogan = state.profile?.[COL.profiles.slogan];
+      if (slogan) $("#brandSub").textContent = slogan;
+    }
+
     async function loadStudents(){
-      const rows = await sbSelect("students", "select=*&order=created_at.desc");
+      const rows = await sbSelect(TABLES.students, `select=*&order=${COL.students.created_at}.desc`);
       state.cache.students = Array.isArray(rows) ? rows : [];
       return state.cache.students;
     }
 
     async function loadExercises(){
-      const rows = await sbSelect("exercises", "select=*&order=name.asc");
+      const rows = await sbSelect(TABLES.exercises, `select=*&order=${COL.exercises.name}.asc`);
       state.cache.exercises = Array.isArray(rows) ? rows : [];
       return state.cache.exercises;
     }
 
     async function loadSessions(){
-      // seu schema está com session_date (date). Mantemos fallback para date também.
-      let rows;
+      // Ordena por session_date desc (se tiver), senão created_at desc
+      let rows = [];
       try{
-        rows = await sbSelect("sessions", "select=*&order=session_date.desc");
-      }catch(e){
-        rows = await sbSelect("sessions", "select=*&order=date.desc");
+        rows = await sbSelect(TABLES.sessions, `select=*&order=${COL.sessions.session_date}.desc`);
+      }catch(_){
+        rows = await sbSelect(TABLES.sessions, `select=*&order=${COL.sessions.created_at}.desc`);
       }
       state.cache.sessions = Array.isArray(rows) ? rows : [];
       return state.cache.sessions;
@@ -773,7 +788,8 @@
 
     async function refreshAll(){
       if (!state.session?.user?.id) return;
-      state.loading = true; render();
+      state.loading = true;
+      render();
       try{
         await Promise.all([
           loadProfile().catch(()=>null),
@@ -787,27 +803,72 @@
       }
     }
 
-    /* =========================
-       4) Branding (logo/avatar)
-    ========================= */
-    function applyBrandLogo(profile){
-      const img = $("#brandLogoImg");
-      const fallback = $("#brandLogoFallback");
-      const url = profile?.logo_url || profile?.avatar_url || null;
-      if (url){
-        img.src = url;
-        img.style.display = "block";
-        fallback.style.display = "none";
-      }else{
-        img.removeAttribute("src");
-        img.style.display = "none";
-        fallback.style.display = "block";
-      }
-    }
+    /* ===============================================================
+       4) BOTÕES TOP / CONFIG
+    =============================================================== */
+    $("#btnOpenConfig").addEventListener("click", () => {
+      $("#cfgUrl").value = state.sbUrl || "";
+      $("#cfgKey").value = state.sbKey || "";
+      cfgStatus("Cole a URL e Publishable key e clique em Salvar.", "warn");
+      openModal("configModal");
+    });
 
-    /* =========================
-       5) Render
-    ========================= */
+    $("#btnQuickHelp").addEventListener("click", () => openModal("helpModal"));
+    $("#btnLogout").addEventListener("click", sbLogout);
+
+    $("#btnSaveConfig").addEventListener("click", () => {
+      const url = $("#cfgUrl").value.trim();
+      const key = $("#cfgKey").value.trim();
+      if (!url || !key){
+        cfgStatus("Faltou preencher URL e/ou ANON_KEY.", "bad");
+        return;
+      }
+      state.sbUrl = url;
+      state.sbKey = key;
+      localStorage.setItem(LS.url, url);
+      localStorage.setItem(LS.key, key);
+      setEnvTag();
+      cfgStatus("Config salvo. Agora clique em Testar conexão e depois feche.", "ok");
+      syncBadge();
+      render();
+    });
+
+    $("#btnClearConfig").addEventListener("click", () => {
+      localStorage.removeItem(LS.url);
+      localStorage.removeItem(LS.key);
+      state.sbUrl = "";
+      state.sbKey = "";
+      state.session = null;
+      state.profile = null;
+      state.cache = { students:[], sessions:[], exercises:[] };
+      setEnvTag();
+      setBadge("warn","Desconectado");
+      $("#btnLogout").disabled = true;
+      $("#uidShort").textContent = "—";
+      cfgStatus("Config limpo. Cole novamente para usar o app.", "warn");
+      render();
+    });
+
+    $("#btnTestConn").addEventListener("click", async () => {
+      if (!state.sbUrl || !state.sbKey){
+        cfgStatus("Sem URL/AnonKey. Salve primeiro.", "bad");
+        return;
+      }
+      cfgStatus("Testando conexão…", "warn");
+      try{
+        const res = await fetch(state.sbUrl + "/rest/v1/", {
+          headers: { apikey: state.sbKey, Authorization: "Bearer " + state.sbKey }
+        });
+        // Só precisamos que responda (não importa o status)
+        cfgStatus("Conexão OK (servidor respondeu).", "ok");
+      }catch(err){
+        cfgStatus("Falha ao conectar. Verifique URL/AnonKey.", "bad");
+      }
+    });
+
+    /* ===============================================================
+       5) RENDER (Views)
+    =============================================================== */
     function render(){
       setEnvTag();
       syncBadge();
@@ -825,6 +886,7 @@
         return;
       }
 
+      // Logado
       const v = state.view;
       if (v === "dashboard") root.appendChild(viewDashboard());
       else if (v === "alunos") root.appendChild(viewAlunos());
@@ -836,75 +898,78 @@
     }
 
     function viewNoConfig(){
-      return el("div",{class:"grid"},[
-        el("div",{class:"card"},[
-          el("h2",{},["Configuração necessária"]),
-          el("p",{},["Este app precisa da URL e da Publishable key do seu projeto Supabase."]),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn ok", onclick:()=>$("#btnOpenConfig").click()},["Abrir Config"]),
-            el("button",{class:"btn", onclick:()=>openModal("helpModal")},["Ajuda"]),
+      return el("div", { class:"grid" }, [
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Configuração necessária"]),
+          el("p", {}, ["Este app precisa da URL e da Publishable key (Anon Key) do seu projeto Supabase."]),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn ok", onclick: () => $("#btnOpenConfig").click() }, ["Abrir Config"]),
+            el("button", { class:"btn", onclick: () => openModal("helpModal") }, ["Ajuda"]),
           ]),
-          el("div",{class:"status"},["Sem configuração. Cole SUPABASE_URL + Publishable key para continuar."])
+          el("div", { class:"status" }, ["Sem configuração. Cole SUPABASE_URL + SUPABASE_ANON_KEY para continuar."])
         ]),
-        el("div",{class:"card"},[
-          el("h2",{},["Status do projeto"]),
-          el("p",{},["Quando estiver configurado, faremos login e carregaremos: profiles, students, sessions, exercises."]),
-          el("div",{class:"hr"}),
-          el("div",{class:"muted", style:"font-size:13px; line-height:1.5"},[
-            "✅ GitHub Pages/Domínio: ok",
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Status do projeto"]),
+          el("p", {}, ["Quando estiver configurado, faremos login e carregaremos: profiles, students, sessions, exercises."]),
+          el("div", { class:"hr" }),
+          el("div", { class:"muted", style:"font-size:13px; line-height:1.5" }, [
+            "✅ GitHub Pages: ok",
             el("br"),
-            "⏳ Próximo: Config + Login"
+            "✅ Domínio custom: ok",
+            el("br"),
+            "⏳ Próximo: conectar Supabase via Config e logar."
           ])
         ])
       ]);
     }
 
     function viewLogin(){
-      return el("div",{class:"grid"},[
-        el("div",{class:"card"},[
-          el("h2",{},["Entrar (Supabase)"]),
-          el("p",{},["Login por email/senha. Depois o app carrega seu perfil e dados."]),
-          el("label",{},["Email"]),
-          el("input",{id:"loginEmail", placeholder:"seuemail@dominio.com", value:""}),
-          el("label",{},["Senha"]),
-          el("input",{id:"loginPass", type:"password", placeholder:"••••••••"}),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn ok", onclick:doLogin},["Fazer login"]),
-            el("button",{class:"btn", onclick:()=>$("#btnOpenConfig").click()},["Config"]),
+      return el("div", { class:"grid" }, [
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Entrar (Supabase)"]),
+          el("p", {}, ["Login por email/senha. Depois o app carrega seu perfil e dados."]),
+          el("label", {}, ["Email"]),
+          el("input", { id:"loginEmail", placeholder:"seuemail@dominio.com" }),
+          el("label", {}, ["Senha"]),
+          el("input", { id:"loginPass", type:"password", placeholder:"••••••••" }),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn ok", onclick: doLogin }, ["Fazer login"]),
+            el("button", { class:"btn", onclick: () => $("#btnOpenConfig").click() }, ["Config"]),
           ]),
-          el("div",{id:"loginStatus", class:"status"},["Aguardando login…"])
+          el("div", { id:"loginStatus", class:"status" }, ["Aguardando login…"])
         ]),
-        el("div",{class:"card"},[
-          el("h2",{},["Diagnóstico"]),
-          el("p",{},["Confira URL e Publishable key."]),
-          el("div",{class:"row"},[
-            el("div",{},[
-              el("div",{class:"tag"},["SUPABASE_URL"]),
-              el("div",{class:"mono", style:"margin-top:6px; font-size:12px; overflow-wrap:anywhere"},[state.sbUrl || "—"])
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Diagnóstico"]),
+          el("p", {}, ["Aqui você confere se a URL/AnonKey estão OK."]),
+          el("div", { class:"row" }, [
+            el("div", {}, [
+              el("div", { class:"tag" }, ["SUPABASE_URL"]),
+              el("div", { class:"mono", style:"margin-top:6px; font-size:12px; overflow-wrap:anywhere" }, [state.sbUrl || "—"])
             ]),
-            el("div",{},[
-              el("div",{class:"tag"},["PUBLISHABLE KEY"]),
-              el("div",{class:"mono", style:"margin-top:6px; font-size:12px; overflow-wrap:anywhere"},[state.sbKey ? (state.sbKey.slice(0,20)+"…") : "—"])
+            el("div", {}, [
+              el("div", { class:"tag" }, ["ANON_KEY"]),
+              el("div", { class:"mono", style:"margin-top:6px; font-size:12px; overflow-wrap:anywhere" }, [state.sbKey ? (state.sbKey.slice(0,20)+"…") : "—"])
             ]),
           ]),
-          el("div",{class:"hr"}),
-          el("div",{class:"muted", style:"font-size:13px; line-height:1.5"},[
+          el("div", { class:"hr" }),
+          el("div", { class:"muted", style:"font-size:13px; line-height:1.55" }, [
             "Se der erro de login: confirme o usuário em Authentication → Users.",
             el("br"),
-            "Se logar mas não carregar dados: é RLS/policies ou coluna faltando."
+            "Se logar e não carregar dados: é RLS/Políticas ou colunas faltando (o app tenta corrigir automaticamente)."
           ])
-        ])
+        ]),
       ]);
     }
 
     async function doLogin(){
-      const email = $("#loginEmail").value.trim();
-      const pass = $("#loginPass").value;
+      const email = ($("#loginEmail").value || "").trim();
+      const pass = $("#loginPass").value || "";
       const box = $("#loginStatus");
       box.className = "status";
       box.textContent = "Entrando…";
       try{
         await sbLogin(email, pass);
+        $("#btnLogout").disabled = false;
         box.className = "status ok";
         box.textContent = "Login OK. Carregando dados…";
         await refreshAll();
@@ -929,85 +994,87 @@
     }
 
     function viewDashboard(){
-      const name = state.profile?.name || "—";
-      const cref = state.profile?.cref || "—";
-      const slogan = state.profile?.slogan || "—";
+      const name = state.profile?.[COL.profiles.name] || "—";
+      const cref = state.profile?.[COL.profiles.cref] || "—";
+      const slogan = state.profile?.[COL.profiles.slogan] || "—";
+
       const students = state.cache.students || [];
       const sessions = state.cache.sessions || [];
       const exs = state.cache.exercises || [];
 
       const lastSession = sessions[0];
-      const lastTitle = lastSession?.title || lastSession?.name || "—";
-      const lastDate = lastSession?.session_date ? fmtDateOnly(lastSession.session_date) : (lastSession?.date ? fmtDateTime(lastSession.date) : fmtDateTime(lastSession?.created_at));
+      const lastTitle = lastSession?.[COL.sessions.title] || "—";
+      const lastDate = lastSession?.[COL.sessions.session_date] || lastSession?.[COL.sessions.created_at] || null;
 
-      return el("div",{class:"grid"},[
-        el("div",{class:"card"},[
-          el("h2",{},["Dashboard"]),
-          el("p",{},["Visão geral do seu sistema."]),
-          el("div",{class:"row"},[
+      return el("div", { class:"grid" }, [
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Dashboard"]),
+          el("p", {}, ["Visão geral do seu sistema."]),
+          el("div", { class:"row" }, [
             metric("Profissional", name, "ok"),
             metric("CREF", cref, "warn"),
             metric("Slogan", slogan, ""),
           ]),
-          el("div",{class:"hr"}),
-          el("div",{class:"row"},[
+          el("div", { class:"hr" }),
+          el("div", { class:"row" }, [
             metric("Alunos", String(students.length), "ok"),
             metric("Sessões", String(sessions.length), "ok"),
             metric("Exercícios", String(exs.length), "ok"),
           ]),
-          el("div",{class:"hr"}),
-          el("div",{class:"muted", style:"font-size:13px; line-height:1.55"},[
-            "Última sessão: ", el("span",{class:"mono"},[lastTitle]),
+          el("div", { class:"hr" }),
+          el("div", { class:"muted", style:"font-size:13px; line-height:1.55" }, [
+            "Última sessão: ", el("span", { class:"mono" }, [lastTitle]),
             el("br"),
-            "Data: ", el("span",{class:"mono"},[lastDate]),
+            "Data: ", el("span", { class:"mono" }, [fmtDateOnly(lastDate)])
           ]),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn ok", onclick:refreshAll},[ state.loading ? "Atualizando…" : "Atualizar tudo" ]),
-            el("button",{class:"btn", onclick:()=>setView("alunos")},["Ir para Alunos"]),
-            el("button",{class:"btn", onclick:()=>setView("sessoes")},["Ir para Sessões"]),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn ok", onclick: refreshAll }, [ state.loading ? "Atualizando…" : "Atualizar tudo" ]),
+            el("button", { class:"btn", onclick: () => setView("alunos") }, ["Ir para Alunos"]),
+            el("button", { class:"btn", onclick: () => setView("sessoes") }, ["Ir para Sessões"]),
           ]),
-          state.loading ? el("div",{class:"status"},["Carregando…"]) : el("div",{class:"status ok"},["Sistema operacional."])
+          state.loading ? el("div", { class:"status" }, ["Carregando…"]) : el("div", { class:"status ok" }, ["Sistema operacional."])
         ]),
-        el("div",{class:"card"},[
-          el("h2",{},["Checklist técnico (V1)"]),
-          el("p",{},["Confirmação do “padrão completo” antes de evoluir."]),
+
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Checklist técnico (V1)"]),
+          el("p", {}, ["Confirmação do “padrão completo” antes de evoluir."]),
           checkItem("Auth (login/logout) funcionando", !!state.session?.user?.id),
           checkItem("profiles criado (id = uid)", !!state.profile),
           checkItem("students acessível (RLS ok)", Array.isArray(state.cache.students)),
           checkItem("sessions acessível (RLS ok)", Array.isArray(state.cache.sessions)),
           checkItem("exercises acessível (RLS ok)", Array.isArray(state.cache.exercises)),
-          el("div",{class:"hr"}),
-          el("div",{class:"muted", style:"font-size:12px; line-height:1.6"},[
-            "Se algum item falhar: ajustamos schema/policies com segurança."
+          el("div", { class:"hr" }),
+          el("div", { class:"muted", style:"font-size:12px; line-height:1.6" }, [
+            "Se algum item falhar: é RLS ou coluna faltando. O app tenta corrigir, mas se você mudar nomes no banco, ajuste em COL no topo do arquivo."
           ])
-        ])
+        ]),
       ]);
     }
 
-    /* =========================
-       6) Alunos (students)
-    ========================= */
+    /* ===============================================================
+       6) ALUNOS (students)
+    =============================================================== */
     function viewAlunos(){
-      return el("div",{class:"grid"},[
-        el("div",{class:"card"},[
-          el("h2",{},["Alunos"]),
-          el("p",{},["Cadastre e gerencie seus alunos."]),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn ok", onclick:()=>openStudentModal()},["+ Novo aluno"]),
-            el("button",{class:"btn", onclick:loadStudentsThenRender},["Recarregar"]),
+      return el("div", { class:"grid" }, [
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Alunos"]),
+          el("p", {}, ["Cadastre e gerencie seus alunos."]),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn ok", onclick: () => openStudentModal() }, ["+ Novo aluno"]),
+            el("button", { class:"btn", onclick: loadStudentsThenRender }, ["Recarregar"]),
           ]),
-          el("div",{class:"hr"}),
+          el("div", { class:"hr" }),
           renderStudentsTable(),
         ]),
-        el("div",{class:"card"},[
-          el("h2",{},["Dica operacional"]),
-          el("p",{},["Padrão: aluno → sessões → itens da sessão."]),
-          el("div",{class:"muted", style:"font-size:13px; line-height:1.55"},[
-            "• Use nome completo.",
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Dica operacional"]),
+          el("p", {}, ["Padrão simples e escalável: aluno → sessões → itens da sessão (exercícios)."]),
+          el("div", { class:"muted", style:"font-size:13px; line-height:1.55" }, [
+            "• Nome completo",
             el("br"),
-            "• Objetivo e observações (lesões/restrições).",
+            "• Objetivo (ex.: Hipertrofia, Emagrecimento)",
             el("br"),
-            "• Depois crie sessões vinculadas."
+            "• Observações (lesões, restrições)"
           ])
         ])
       ]);
@@ -1023,71 +1090,84 @@
     function renderStudentsTable(){
       const data = state.cache.students || [];
       if (!data.length){
-        return el("div",{class:"status"},["Nenhum aluno ainda. Clique em “+ Novo aluno”."]);
+        return el("div", { class:"status" }, ["Nenhum aluno ainda. Clique em “+ Novo aluno”."]);
       }
-      return el("div",{},[
-        el("table",{},[
-          el("thead",{},[
-            el("tr",{},[
-              el("th",{},["Nome"]),
-              el("th",{},["Objetivo"]),
-              el("th",{},["Criado"]),
-              el("th",{},["Ações"]),
+
+      const table = el("table", {}, [
+        el("thead", {}, [
+          el("tr", {}, [
+            el("th", {}, ["Nome"]),
+            el("th", {}, ["Objetivo"]),
+            el("th", {}, ["Criado"]),
+            el("th", {}, ["Ações"]),
+          ])
+        ]),
+        el("tbody", {}, data.map(row => {
+          const name = row[COL.students.name] || "—";
+          const goal = row[COL.students.goal] || "—";
+          const created = fmtDateTime(row[COL.students.created_at]);
+          return el("tr", {}, [
+            el("td", {}, [name]),
+            el("td", { class:"muted" }, [goal]),
+            el("td", { class:"muted" }, [created]),
+            el("td", { class:"tdActions" }, [
+              el("button", { class:"btn small", onclick: () => openStudentModal(row) }, ["Editar"]),
+              " ",
+              el("button", { class:"btn small", onclick: () => setView("sessoes") }, ["Sessões"]),
+              " ",
+              el("button", { class:"btn small bad", onclick: () => deleteStudent(row) }, ["Excluir"]),
             ])
-          ]),
-          el("tbody",{}, data.map(row=>{
-            const name = row.name || row.full_name || "—";
-            const goal = row.goal || row.objective || "—";
-            const created = fmtDateTime(row.created_at);
-            return el("tr",{},[
-              el("td",{},[name]),
-              el("td",{class:"muted"},[goal]),
-              el("td",{class:"muted"},[created]),
-              el("td",{class:"tdActions"},[
-                el("button",{class:"btn small", onclick:()=>openStudentModal(row)},["Editar"]),
-                " ",
-                el("button",{class:"btn small", onclick:()=>setView("sessoes")},["Sessões"]),
-                " ",
-                el("button",{class:"btn small bad", onclick:()=>deleteStudent(row)},["Excluir"]),
-              ])
-            ]);
-          }))
-        ])
+          ]);
+        }))
       ]);
+
+      return el("div", {}, [table]);
     }
 
     function openStudentModal(existing=null){
-      const back = el("div",{class:"modalBackdrop", style:"display:flex"});
-      const m = el("div",{class:"modal"});
+      const back = el("div", { class:"modalBackdrop", style:"display:flex" });
+      const m = el("div", { class:"modal" });
       const isEdit = !!existing;
 
-      const inName = el("input",{ value: existing?.name || existing?.full_name || "", placeholder:"Ex: Fabiano de Brito" });
-      const inGoal = el("input",{ value: existing?.goal || existing?.objective || "", placeholder:"Ex: Hipertrofia / Emagrecimento" });
-      const inObs  = el("textarea",{},[ existing?.notes || existing?.obs || "" ]);
+      const inName = el("input", { value: existing?.[COL.students.name] || "" });
+      const inGoal = el("input", { value: existing?.[COL.students.goal] || "" });
+      const inObs  = el("textarea", {}, [ existing?.[COL.students.notes] || "" ]);
 
-      m.appendChild(el("div",{class:"modalHead"},[
-        el("h3",{},[isEdit ? "Editar aluno" : "Novo aluno"]),
-        el("button",{class:"close", onclick:()=>back.remove()},["Fechar"])
+      m.appendChild(el("div", { class:"modalHead" }, [
+        el("h3", {}, [isEdit ? "Editar aluno" : "Novo aluno"]),
+        el("button", { class:"close", onclick: () => back.remove() }, ["Fechar"])
       ]));
 
-      m.appendChild(el("div",{class:"modalBody"},[
-        el("div",{class:"row"},[
-          el("div",{},[ el("label",{},["Nome"]), inName ]),
-          el("div",{},[ el("label",{},["Objetivo"]), inGoal ]),
+      m.appendChild(el("div", { class:"modalBody" }, [
+        el("div", { class:"row" }, [
+          el("div", {}, [ el("label", {}, ["Nome"]), inName ]),
+          el("div", {}, [ el("label", {}, ["Objetivo"]), inGoal ]),
         ]),
-        el("label",{},["Observações"]),
+        el("label", {}, ["Observações"]),
         inObs,
-        el("div",{class:"actions"},[
-          el("button",{class:"btn ok", onclick:async()=>{
-            const payload = { name: inName.value.trim(), goal: inGoal.value.trim(), notes: inObs.value.trim() };
-            if (!payload.name){ alert("Preencha o nome."); return; }
+        el("div", { class:"actions" }, [
+          el("button", { class:"btn ok", onclick: async () => {
+            const payload = {
+              [COL.students.name]: (inName.value || "").trim(),
+              [COL.students.goal]: (inGoal.value || "").trim(),
+              [COL.students.notes]: (inObs.value || "").trim(),
+            };
+            if (!payload[COL.students.name]) { alert("Preencha o nome."); return; }
+
             try{
-              if (isEdit) await updateUltraSafe("students", `id=eq.${encodeURIComponent(existing.id)}`, payload);
-              else await insertUltraSafe("students", payload);
-              await loadStudents(); back.remove(); render();
-            }catch(e){ alert("Erro ao salvar aluno: " + e.message); }
-          }},[isEdit ? "Salvar" : "Criar"]),
-          el("button",{class:"btn", onclick:()=>back.remove()},["Cancelar"])
+              if (isEdit){
+                await updateSmart(TABLES.students, `${COL.students.id}=eq.${encodeURIComponent(existing[COL.students.id])}`, payload);
+              } else {
+                await insertSmart(TABLES.students, payload);
+              }
+              await loadStudents();
+              back.remove();
+              render();
+            }catch(e){
+              alert("Erro ao salvar aluno: " + e.message);
+            }
+          }}, [isEdit ? "Salvar" : "Criar"]),
+          el("button", { class:"btn", onclick: () => back.remove() }, ["Cancelar"])
         ])
       ]));
 
@@ -1096,9 +1176,9 @@
     }
 
     async function deleteStudent(row){
-      if (!confirm("Excluir este aluno? (sessões não são apagadas automaticamente)")) return;
+      if (!confirm("Excluir este aluno? (Sessões vinculadas não são apagadas automaticamente.)")) return;
       try{
-        await sbDelete("students", `id=eq.${encodeURIComponent(row.id)}`);
+        await sbDelete(TABLES.students, `${COL.students.id}=eq.${encodeURIComponent(row[COL.students.id])}`);
         await loadStudents();
         render();
       }catch(e){
@@ -1106,148 +1186,32 @@
       }
     }
 
-    /* =========================
-       7) Exercícios (exercises)
-    ========================= */
-    function viewExercicios(){
-      return el("div",{class:"grid"},[
-        el("div",{class:"card"},[
-          el("h2",{},["Biblioteca de Exercícios"]),
-          el("p",{},["Cadastre exercícios e use nas sessões."]),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn ok", onclick:()=>openExerciseModal()},["+ Novo exercício"]),
-            el("button",{class:"btn", onclick:loadExercisesThenRender},["Recarregar"]),
-          ]),
-          el("div",{class:"hr"}),
-          renderExercisesTable(),
-        ]),
-        el("div",{class:"card"},[
-          el("h2",{},["Seeds rápidos (opcional)"]),
-          el("p",{},["Admin tem botões para acelerar base de exercícios e garantir perfil."]),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn", onclick:()=>setView("admin")},["Ir para Admin"])
-          ])
-        ])
-      ]);
-    }
-
-    async function loadExercisesThenRender(){
-      state.loading = true; render();
-      try{ await loadExercises(); }
-      catch(e){ alert("Erro ao carregar exercícios: " + e.message); }
-      finally{ state.loading = false; render(); }
-    }
-
-    function renderExercisesTable(){
-      const data = state.cache.exercises || [];
-      if (!data.length){
-        return el("div",{class:"status"},["Nenhum exercício ainda. Clique em “+ Novo exercício” ou use Seeds no Admin."]);
-      }
-      return el("div",{},[
-        el("table",{},[
-          el("thead",{},[
-            el("tr",{},[
-              el("th",{},["Nome"]),
-              el("th",{},["Grupo"]),
-              el("th",{},["Criado"]),
-              el("th",{},["Ações"]),
-            ])
-          ]),
-          el("tbody",{}, data.map(row=>{
-            const name = row.name || "—";
-            const group = row.group_name || row.group || row.muscle_group || row.category || "—";
-            const created = fmtDateTime(row.created_at);
-            return el("tr",{},[
-              el("td",{},[name]),
-              el("td",{class:"muted"},[group]),
-              el("td",{class:"muted"},[created]),
-              el("td",{class:"tdActions"},[
-                el("button",{class:"btn small", onclick:()=>openExerciseModal(row)},["Editar"]),
-                " ",
-                el("button",{class:"btn small bad", onclick:()=>deleteExercise(row)},["Excluir"]),
-              ])
-            ]);
-          }))
-        ])
-      ]);
-    }
-
-    function openExerciseModal(existing=null){
-      const back = el("div",{class:"modalBackdrop", style:"display:flex"});
-      const m = el("div",{class:"modal"});
-      const isEdit = !!existing;
-
-      const inName = el("input",{ value: existing?.name || "", placeholder:"Ex: Agachamento livre" });
-      const inGroup = el("input",{ value: existing?.group_name || existing?.group || existing?.muscle_group || "", placeholder:"Ex: Inferiores / Costas / Peito" });
-      const inNotes = el("textarea",{},[ existing?.notes || "" ]);
-
-      m.appendChild(el("div",{class:"modalHead"},[
-        el("h3",{},[isEdit ? "Editar exercício" : "Novo exercício"]),
-        el("button",{class:"close", onclick:()=>back.remove()},["Fechar"])
-      ]));
-
-      m.appendChild(el("div",{class:"modalBody"},[
-        el("div",{class:"row"},[
-          el("div",{},[ el("label",{},["Nome"]), inName ]),
-          el("div",{},[ el("label",{},["Grupo"]), inGroup ]),
-        ]),
-        el("label",{},["Notas (opcional)"]),
-        inNotes,
-        el("div",{class:"actions"},[
-          el("button",{class:"btn ok", onclick:async()=>{
-            const payload = { name: inName.value.trim(), group_name: inGroup.value.trim(), notes: inNotes.value.trim() };
-            if (!payload.name){ alert("Preencha o nome do exercício."); return; }
-            try{
-              if (isEdit) await updateUltraSafe("exercises", `id=eq.${encodeURIComponent(existing.id)}`, payload);
-              else await insertUltraSafe("exercises", payload);
-              await loadExercises(); back.remove(); render();
-            }catch(e){ alert("Erro ao salvar exercício: " + e.message); }
-          }},[isEdit ? "Salvar" : "Criar"]),
-          el("button",{class:"btn", onclick:()=>back.remove()},["Cancelar"])
-        ])
-      ]));
-
-      back.appendChild(m);
-      document.body.appendChild(back);
-    }
-
-    async function deleteExercise(row){
-      if (!confirm("Excluir este exercício? (se estiver em itens, pode bloquear)")) return;
-      try{
-        await sbDelete("exercises", `id=eq.${encodeURIComponent(row.id)}`);
-        await loadExercises();
-        render();
-      }catch(e){
-        alert("Erro ao excluir: " + e.message);
-      }
-    }
-
-    /* =========================
-       8) Sessões + Itens (sessions/session_items)
-    ========================= */
+    /* ===============================================================
+       7) SESSÕES (sessions)
+    =============================================================== */
     function viewSessoes(){
-      return el("div",{class:"grid"},[
-        el("div",{class:"card"},[
-          el("h2",{},["Sessões"]),
-          el("p",{},["Crie sessões, vincule ao aluno e registre itens (exercícios)."]),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn ok", onclick:()=>openSessionModal()},["+ Nova sessão"]),
-            el("button",{class:"btn", onclick:loadSessionsThenRender},["Recarregar"]),
+      return el("div", { class:"grid" }, [
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Sessões"]),
+          el("p", {}, ["Crie sessões, vincule a um aluno e registre itens (exercícios)."]),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn ok", onclick: () => openSessionModal() }, ["+ Nova sessão"]),
+            el("button", { class:"btn", onclick: loadSessionsThenRender }, ["Recarregar"]),
           ]),
-          el("div",{class:"hr"}),
+          el("div", { class:"hr" }),
           renderSessionsTable(),
         ]),
-        el("div",{class:"card"},[
-          el("h2",{},["Registrar itens"]),
-          el("p",{},["Após criar uma sessão, clique em “Itens” para registrar o treino."]),
-          el("div",{class:"hint"},[
-            el("b",{},["Métodos regressivos (pronto p/ evoluir):"]),
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Registrar itens (treino)"]),
+          el("p", {}, ["Após criar uma sessão, clique em “Itens” para registrar exercícios."]),
+          el("div", { class:"muted", style:"font-size:13px; line-height:1.55" }, [
+            "Você terá:",
             el("br"),
-            "No item você registra:",
+            "• Séries / Reps / Carga / RPE",
             el("br"),
-            "• Método: Carga regressiva / Reps regressivas / Recuperação regressiva",
+            "• Método (ex.: Carga regressiva, Reps regressivas, Recuperação regressiva)",
             el("br"),
-            "• Prescrição (texto): ex.: “4×12-10-8”, “60-55-50kg”, “90-60-45s”"
+            "• Esquema (ex.: 12-10-8 / 60-70-80% / 90s-60s-45s)"
           ])
         ])
       ]);
@@ -1263,111 +1227,122 @@
     function renderSessionsTable(){
       const data = state.cache.sessions || [];
       if (!data.length){
-        return el("div",{class:"status"},["Nenhuma sessão ainda. Clique em “+ Nova sessão”."]);
+        return el("div", { class:"status" }, ["Nenhuma sessão ainda. Clique em “+ Nova sessão”."]);
       }
 
       const students = state.cache.students || [];
       const studentNameById = (id) => {
-        const s = students.find(x => x.id === id);
-        return s?.name || s?.full_name || "—";
+        const s = students.find(x => x[COL.students.id] === id);
+        return s?.[COL.students.name] || "—";
       };
 
-      return el("div",{},[
-        el("table",{},[
-          el("thead",{},[
-            el("tr",{},[
-              el("th",{},["Sessão"]),
-              el("th",{},["Aluno"]),
-              el("th",{},["Data"]),
-              el("th",{},["Status"]),
-              el("th",{},["Ações"]),
-            ])
-          ]),
-          el("tbody",{}, data.map(row=>{
-            const title = row.title || row.name || "Sessão";
-            const sid = row.student_id || row.student || null;
-            const aluno = sid ? studentNameById(sid) : "—";
-            const date = row.session_date ? fmtDateOnly(row.session_date) : (row.date ? fmtDateTime(row.date) : fmtDateTime(row.created_at));
-            const status = String(row.status || "planejada").toLowerCase();
-            const tagClass = status.includes("execut") || status.includes("concl") ? "ok" : (status.includes("cancel") ? "bad" : "warn");
+      const table = el("table", {}, [
+        el("thead", {}, [
+          el("tr", {}, [
+            el("th", {}, ["Sessão"]),
+            el("th", {}, ["Aluno"]),
+            el("th", {}, ["Data"]),
+            el("th", {}, ["Status"]),
+            el("th", {}, ["Ações"]),
+          ])
+        ]),
+        el("tbody", {}, data.map(row => {
+          const title = row[COL.sessions.title] || "Sessão";
+          const sid = row[COL.sessions.student_id] || null;
+          const aluno = sid ? studentNameById(sid) : "—";
+          const date = row[COL.sessions.session_date] || row[COL.sessions.created_at] || null;
+          const status = String(row[COL.sessions.status] || "planejada").toLowerCase();
 
-            return el("tr",{},[
-              el("td",{},[title]),
-              el("td",{class:"muted"},[aluno]),
-              el("td",{class:"muted"},[date]),
-              el("td",{},[ el("span",{class:"tag "+tagClass},[status]) ]),
-              el("td",{class:"tdActions"},[
-                el("button",{class:"btn small", onclick:()=>openSessionModal(row)},["Editar"]),
-                " ",
-                el("button",{class:"btn small", onclick:()=>openItemsModal(row)},["Itens"]),
-                " ",
-                el("button",{class:"btn small bad", onclick:()=>deleteSession(row)},["Excluir"]),
-              ])
-            ]);
-          }))
-        ])
+          const tagClass = status.includes("execut") ? "ok" : (status.includes("cancel") ? "bad" : "warn");
+
+          return el("tr", {}, [
+            el("td", {}, [title]),
+            el("td", { class:"muted" }, [aluno]),
+            el("td", { class:"muted" }, [fmtDateOnly(date)]),
+            el("td", {}, [ el("span", { class:"tag "+tagClass }, [status]) ]),
+            el("td", { class:"tdActions" }, [
+              el("button", { class:"btn small", onclick: () => openSessionModal(row) }, ["Editar"]),
+              " ",
+              el("button", { class:"btn small", onclick: () => openItemsModal(row) }, ["Itens"]),
+              " ",
+              el("button", { class:"btn small bad", onclick: () => deleteSession(row) }, ["Excluir"]),
+            ])
+          ]);
+        }))
       ]);
+
+      return el("div", {}, [table]);
     }
 
     function openSessionModal(existing=null){
-      const back = el("div",{class:"modalBackdrop", style:"display:flex"});
-      const m = el("div",{class:"modal"});
+      const back = el("div", { class:"modalBackdrop", style:"display:flex" });
+      const m = el("div", { class:"modal" });
       const isEdit = !!existing;
 
       const students = state.cache.students || [];
-      const selStudent = el("select",{});
-      selStudent.appendChild(el("option",{value:""},["(sem aluno)"]));
-      students.forEach(s=>{
-        selStudent.appendChild(el("option",{value:s.id},[s.name || s.full_name || "Aluno"]));
-      });
+      const selStudent = el("select", {});
+      selStudent.appendChild(el("option", { value:"" }, ["(sem aluno)"]));
+      students.forEach(s => selStudent.appendChild(el("option", { value: s[COL.students.id] }, [s[COL.students.name] || "Aluno"])));
 
-      const inTitle = el("input",{ value: existing?.title || existing?.name || "", placeholder:"Ex: Força — Superiores" });
-      const inDate = el("input",{ type:"date" }); // ✅ seu banco usa date
-      const inStatus = el("select",{},[
-        el("option",{value:"planejada"},["planejada"]),
-        el("option",{value:"executada"},["executada"]),
-        el("option",{value:"cancelada"},["cancelada"]),
+      const inTitle = el("input", { value: existing?.[COL.sessions.title] || "", placeholder:"Ex: Força — Superiores" });
+      const inDate  = el("input", { type:"date" });
+      const inStatus= el("select", {}, [
+        el("option", { value:"planejada" }, ["planejada"]),
+        el("option", { value:"executada" }, ["executada"]),
+        el("option", { value:"cancelada" }, ["cancelada"]),
       ]);
-      const inNotes = el("textarea",{},[ existing?.notes || "" ]);
+      const inNotes = el("textarea", {}, [ existing?.[COL.sessions.notes] || "" ]);
 
-      if (existing?.student_id) selStudent.value = existing.student_id;
-      if (existing?.status) inStatus.value = existing.status;
-      if (existing?.session_date) inDate.value = existing.session_date;
+      if (existing?.[COL.sessions.student_id]) selStudent.value = existing[COL.sessions.student_id];
+      if (existing?.[COL.sessions.status]) inStatus.value = existing[COL.sessions.status];
 
-      m.appendChild(el("div",{class:"modalHead"},[
-        el("h3",{},[isEdit ? "Editar sessão" : "Nova sessão"]),
-        el("button",{class:"close", onclick:()=>back.remove()},["Fechar"])
+      const existingDate = existing?.[COL.sessions.session_date];
+      if (existingDate){
+        // se vier ISO, corta
+        inDate.value = String(existingDate).slice(0,10);
+      }
+
+      m.appendChild(el("div", { class:"modalHead" }, [
+        el("h3", {}, [isEdit ? "Editar sessão" : "Nova sessão"]),
+        el("button", { class:"close", onclick: () => back.remove() }, ["Fechar"])
       ]));
 
-      m.appendChild(el("div",{class:"modalBody"},[
-        el("div",{class:"row"},[
-          el("div",{},[ el("label",{},["Título"]), inTitle ]),
-          el("div",{},[ el("label",{},["Aluno (opcional)"]), selStudent ]),
+      m.appendChild(el("div", { class:"modalBody" }, [
+        el("div", { class:"row" }, [
+          el("div", {}, [ el("label", {}, ["Título"]), inTitle ]),
+          el("div", {}, [ el("label", {}, ["Aluno (opcional)"]), selStudent ]),
         ]),
-        el("div",{class:"row"},[
-          el("div",{},[ el("label",{},["Data (obrigatório)"]), inDate ]),
-          el("div",{},[ el("label",{},["Status"]), inStatus ]),
+        el("div", { class:"row" }, [
+          el("div", {}, [ el("label", {}, ["Data (opcional)"]), inDate ]),
+          el("div", {}, [ el("label", {}, ["Status"]), inStatus ]),
         ]),
-        el("label",{},["Notas"]),
+        el("label", {}, ["Notas"]),
         inNotes,
-        el("div",{class:"actions"},[
-          el("button",{class:"btn ok", onclick:async()=>{
-            if (!inDate.value){ alert("Selecione a data da sessão."); return; }
+
+        el("div", { class:"actions" }, [
+          el("button", { class:"btn ok", onclick: async () => {
             const payload = {
-              title: inTitle.value.trim() || "Sessão",
-              status: inStatus.value,
-              notes: inNotes.value.trim(),
-              session_date: inDate.value
+              [COL.sessions.title]: (inTitle.value || "").trim() || "Sessão",
+              [COL.sessions.status]: inStatus.value,
+              [COL.sessions.notes]: (inNotes.value || "").trim(),
             };
-            if (selStudent.value) payload.student_id = selStudent.value;
+            if (selStudent.value) payload[COL.sessions.student_id] = selStudent.value;
+            if (inDate.value) payload[COL.sessions.session_date] = inDate.value; // date: YYYY-MM-DD
 
             try{
-              if (isEdit) await updateUltraSafe("sessions", `id=eq.${encodeURIComponent(existing.id)}`, payload);
-              else await insertUltraSafe("sessions", payload);
-              await loadSessions(); back.remove(); render();
-            }catch(e){ alert("Erro ao salvar sessão: " + e.message); }
-          }},[isEdit ? "Salvar" : "Criar"]),
-          el("button",{class:"btn", onclick:()=>back.remove()},["Cancelar"])
+              if (isEdit){
+                await updateSmart(TABLES.sessions, `${COL.sessions.id}=eq.${encodeURIComponent(existing[COL.sessions.id])}`, payload);
+              } else {
+                await insertSmart(TABLES.sessions, payload);
+              }
+              await loadSessions();
+              back.remove();
+              render();
+            }catch(e){
+              alert("Erro ao salvar sessão: " + e.message);
+            }
+          }}, [isEdit ? "Salvar" : "Criar"]),
+          el("button", { class:"btn", onclick: () => back.remove() }, ["Cancelar"])
         ])
       ]));
 
@@ -1378,12 +1353,128 @@
     async function deleteSession(row){
       if (!confirm("Excluir esta sessão?")) return;
       try{
-        await sbDelete("sessions", `id=eq.${encodeURIComponent(row.id)}`);
+        await sbDelete(TABLES.sessions, `${COL.sessions.id}=eq.${encodeURIComponent(row[COL.sessions.id])}`);
         await loadSessions();
         render();
       }catch(e){
         alert("Erro ao excluir sessão: " + e.message);
       }
+    }
+
+    /* ===============================================================
+       8) ITENS DA SESSÃO (session_items)
+       - Aqui entram os métodos regressivos
+       - Método e Esquema são opcionais:
+         * se o banco tiver colunas method/scheme, usamos.
+         * se não tiver, colocamos dentro de notes.
+    =============================================================== */
+    async function openItemsModal(sessionRow){
+      const back = el("div", { class:"modalBackdrop", style:"display:flex" });
+      const m = el("div", { class:"modal" });
+
+      const title = sessionRow?.[COL.sessions.title] || "Sessão";
+      const itemsBox = el("div", { class:"status" }, ["Carregando itens…"]);
+
+      const exs = state.cache.exercises || [];
+      const selEx = el("select", {});
+      selEx.appendChild(el("option", { value:"" }, ["Selecione um exercício"]));
+      exs.forEach(ex => selEx.appendChild(el("option", { value: ex[COL.exercises.id] }, [ex[COL.exercises.name] || "Exercício"])));
+
+      const inSets = el("input", { placeholder:"Séries (ex: 4)" });
+      const inReps = el("input", { placeholder:"Reps (ex: 8)" });
+      const inLoad = el("input", { placeholder:"Carga (ex: 60)" });
+      const inRpe  = el("input", { placeholder:"RPE (ex: 7)" });
+
+      // ✅ Campos de método/esquema (regressivos)
+      const selMethod = el("select", {}, [
+        el("option", { value:"" }, ["(método: nenhum)"]),
+        el("option", { value:"carga_regressiva" }, ["Carga regressiva"]),
+        el("option", { value:"reps_regressivas" }, ["Repetições regressivas"]),
+        el("option", { value:"recuperacao_regressiva" }, ["Recuperação regressiva"]),
+        el("option", { value:"tradicional" }, ["Tradicional"]),
+        el("option", { value:"outro" }, ["Outro"]),
+      ]);
+
+      const inScheme = el("input", {
+        placeholder:"Esquema (ex.: 12-10-8 | 60-70-80% | 90s-60s-45s)"
+      });
+
+      const inNotes = el("input", { placeholder:"Notas (opcional)" });
+
+      m.appendChild(el("div", { class:"modalHead" }, [
+        el("h3", {}, ["Itens da sessão — " + title]),
+        el("button", { class:"close", onclick: () => back.remove() }, ["Fechar"])
+      ]));
+
+      m.appendChild(el("div", { class:"modalBody" }, [
+        el("div", { class:"card", style:"padding:12px; margin-bottom:12px" }, [
+          el("div", { class:"muted", style:"font-size:13px; margin-bottom:10px" }, ["Adicionar item (exercício)"]),
+          el("div", { class:"row" }, [
+            el("div", {}, [ el("label", {}, ["Exercício"]), selEx ]),
+            el("div", {}, [ el("label", {}, ["Séries"]), inSets ]),
+            el("div", {}, [ el("label", {}, ["Reps"]), inReps ]),
+          ]),
+          el("div", { class:"row" }, [
+            el("div", {}, [ el("label", {}, ["Carga"]), inLoad ]),
+            el("div", {}, [ el("label", {}, ["RPE"]), inRpe ]),
+            el("div", {}, [ el("label", {}, ["Notas"]), inNotes ]),
+          ]),
+          el("div", { class:"row" }, [
+            el("div", {}, [ el("label", {}, ["Método de treino"]), selMethod ]),
+            el("div", {}, [ el("label", {}, ["Esquema (regressivo / prescrição)"]), inScheme ]),
+          ]),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn ok", onclick: async () => {
+              if (!selEx.value){ alert("Selecione um exercício."); return; }
+
+              const payload = {
+                [COL.items.session_id]: sessionRow[COL.sessions.id],
+                [COL.items.exercise_id]: selEx.value,
+                [COL.items.sets]: toNum(inSets.value),
+                [COL.items.reps]: toNum(inReps.value),
+                [COL.items.load]: toNum(inLoad.value),
+                [COL.items.rpe]:  toNum(inRpe.value),
+              };
+
+              // método/esquema: se o banco não tiver colunas, o insertSmart vai remover
+              if (selMethod.value) payload[COL.items.method] = selMethod.value;
+              if ((inScheme.value || "").trim()) payload[COL.items.scheme] = (inScheme.value || "").trim();
+
+              // notes sempre pode existir
+              const baseNotes = (inNotes.value || "").trim();
+              if (baseNotes) payload[COL.items.notes] = baseNotes;
+
+              // Se o banco não tiver method/scheme, garantimos que a info não se perca:
+              // (vai ser útil para PDF/treino depois)
+              if ((selMethod.value || inScheme.value) && !payload[COL.items.notes]){
+                payload[COL.items.notes] =
+                  `Método: ${selMethod.value || "—"} | Esquema: ${(inScheme.value || "").trim() || "—"}`;
+              } else if ((selMethod.value || inScheme.value) && payload[COL.items.notes]){
+                payload[COL.items.notes] =
+                  payload[COL.items.notes] + ` | Método: ${selMethod.value || "—"} | Esquema: ${(inScheme.value || "").trim() || "—"}`;
+              }
+
+              try{
+                await insertSmart(TABLES.items, payload);
+
+                // limpa
+                inSets.value=""; inReps.value=""; inLoad.value=""; inRpe.value="";
+                inNotes.value=""; inScheme.value=""; selMethod.value="";
+
+                await loadSessionItems(sessionRow[COL.sessions.id], itemsBox);
+              }catch(e){
+                alert("Erro ao adicionar item: " + e.message);
+              }
+            }}, ["Adicionar item"]),
+          ])
+        ]),
+        el("div", {}, [itemsBox])
+      ]));
+
+      back.appendChild(m);
+      document.body.appendChild(back);
+
+      await loadSessionItems(sessionRow[COL.sessions.id], itemsBox);
     }
 
     function toNum(v){
@@ -1393,99 +1484,13 @@
       return Number.isFinite(n) ? n : null;
     }
 
-    async function openItemsModal(sessionRow){
-      const back = el("div",{class:"modalBackdrop", style:"display:flex"});
-      const m = el("div",{class:"modal"});
-
-      const title = sessionRow?.title || "Sessão";
-      const itemsBox = el("div",{class:"status"},["Carregando itens…"]);
-
-      const exs = state.cache.exercises || [];
-      const selEx = el("select",{});
-      selEx.appendChild(el("option",{value:""},["Selecione um exercício"]));
-      exs.forEach(ex=>{
-        selEx.appendChild(el("option",{value:ex.id},[ex.name || "Exercício"]));
-      });
-
-      // campos base
-      const inSets = el("input",{ placeholder:"Séries (ex: 4)", inputmode:"numeric" });
-      const inReps = el("input",{ placeholder:"Reps (ex: 8)", inputmode:"numeric" });
-      const inLoad = el("input",{ placeholder:"Carga (ex: 60)", inputmode:"decimal" });
-      const inRpe  = el("input",{ placeholder:"RPE (ex: 7)", inputmode:"decimal" });
-      const inNotes= el("input",{ placeholder:"Notas (opcional)" });
-
-      // ✅ Métodos regressivos (em texto, compatível com PDF)
-      const selMethod = el("select",{},[
-        el("option",{value:"padrao"},["padrão"]),
-        el("option",{value:"carga_regressiva"},["carga regressiva"]),
-        el("option",{value:"reps_regressivas"},["repetições regressivas"]),
-        el("option",{value:"recuperacao_regressiva"},["recuperação regressiva"]),
-      ]);
-      const inPrescription = el("input",{ placeholder:"Prescrição (texto): ex. 4×12-10-8 | 60-55-50kg | 90-60-45s" });
-
-      m.appendChild(el("div",{class:"modalHead"},[
-        el("h3",{},["Itens da sessão — " + title]),
-        el("button",{class:"close", onclick:()=>back.remove()},["Fechar"])
-      ]));
-
-      m.appendChild(el("div",{class:"modalBody"},[
-        el("div",{class:"card", style:"padding:12px; margin-bottom:12px"},[
-          el("div",{class:"muted", style:"font-size:13px; margin-bottom:10px"},["Adicionar item (exercício)"]),
-          el("div",{class:"row"},[
-            el("div",{},[ el("label",{},["Exercício"]), selEx ]),
-            el("div",{},[ el("label",{},["Séries"]), inSets ]),
-            el("div",{},[ el("label",{},["Reps"]), inReps ]),
-          ]),
-          el("div",{class:"row"},[
-            el("div",{},[ el("label",{},["Carga"]), inLoad ]),
-            el("div",{},[ el("label",{},["RPE"]), inRpe ]),
-            el("div",{},[ el("label",{},["Notas"]), inNotes ]),
-          ]),
-          el("div",{class:"row"},[
-            el("div",{},[ el("label",{},["Método"]), selMethod ]),
-            el("div",{},[ el("label",{},["Prescrição (texto)"]), inPrescription ]),
-          ]),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn ok", onclick:async()=>{
-              if (!selEx.value){ alert("Selecione um exercício."); return; }
-              const payload = {
-                session_id: sessionRow.id,
-                exercise_id: selEx.value,
-                sets: toNum(inSets.value),
-                reps: toNum(inReps.value),
-                load: toNum(inLoad.value),
-                rpe:  toNum(inRpe.value),
-                notes: (inNotes.value || "").trim(),
-                // extras (se não existirem no banco, o insertUltraSafe remove sozinho)
-                method: selMethod.value,
-                prescription: (inPrescription.value || "").trim(),
-              };
-
-              try{
-                await insertUltraSafe("session_items", payload);
-                inSets.value=""; inReps.value=""; inLoad.value=""; inRpe.value=""; inNotes.value="";
-                inPrescription.value=""; selMethod.value="padrao";
-                await loadSessionItems(sessionRow.id, itemsBox);
-              }catch(e){
-                alert("Erro ao adicionar item: " + e.message);
-              }
-            }},["Adicionar item"])
-          ])
-        ]),
-        el("div",{},[itemsBox])
-      ]));
-
-      back.appendChild(m);
-      document.body.appendChild(back);
-
-      await loadSessionItems(sessionRow.id, itemsBox);
-    }
-
     async function loadSessionItems(sessionId, container){
       container.className = "status";
       container.textContent = "Carregando itens…";
+
       try{
-        const rows = await sbSelect("session_items", `select=*&session_id=eq.${encodeURIComponent(sessionId)}&order=created_at.asc`);
+        const rows = await sbSelect(TABLES.items, `select=*&${COL.items.session_id}=eq.${encodeURIComponent(sessionId)}&order=created_at.asc`);
+
         if (!rows.length){
           container.className = "status";
           container.textContent = "Sem itens ainda. Adicione o primeiro exercício acima.";
@@ -1496,72 +1501,210 @@
         container.innerHTML = "";
 
         const exs = state.cache.exercises || [];
-        const exName = (id) => exs.find(e => e.id === id)?.name || "Exercício";
+        const exName = (id) => exs.find(e => e[COL.exercises.id] === id)?.[COL.exercises.name] || "Exercício";
 
-        const table = el("table",{},[
-          el("thead",{},[
-            el("tr",{},[
-              el("th",{},["Exercício"]),
-              el("th",{},["Séries×Reps"]),
-              el("th",{},["Carga"]),
-              el("th",{},["RPE"]),
-              el("th",{},["Método/Prescrição"]),
-              el("th",{},["Notas"]),
-              el("th",{},["Ações"]),
+        const table = el("table", {}, [
+          el("thead", {}, [
+            el("tr", {}, [
+              el("th", {}, ["Exercício"]),
+              el("th", {}, ["Séries×Reps"]),
+              el("th", {}, ["Carga"]),
+              el("th", {}, ["RPE"]),
+              el("th", {}, ["Notas / Método"]),
+              el("th", {}, ["Ações"]),
             ])
           ]),
-          el("tbody",{}, rows.map(it=>{
-            const method = it.method || "—";
-            const presc  = it.prescription || "—";
-            return el("tr",{},[
-              el("td",{},[exName(it.exercise_id)]),
-              el("td",{class:"muted"},[`${it.sets ?? "—"}×${it.reps ?? "—"}`]),
-              el("td",{class:"muted"},[it.load ?? "—"]),
-              el("td",{class:"muted"},[it.rpe ?? "—"]),
-              el("td",{class:"muted"},[method !== "—" || presc !== "—" ? `${method} | ${presc}` : "—"]),
-              el("td",{class:"muted"},[it.notes || "—"]),
-              el("td",{class:"tdActions"},[
-                el("button",{class:"btn small bad", onclick:async()=>{
+          el("tbody", {}, rows.map(it => {
+            const sets = it[COL.items.sets];
+            const reps = it[COL.items.reps];
+            const load = it[COL.items.load];
+            const rpe  = it[COL.items.rpe];
+            const notes= it[COL.items.notes] || "—";
+
+            return el("tr", {}, [
+              el("td", {}, [exName(it[COL.items.exercise_id])]),
+              el("td", { class:"muted" }, [`${sets ?? "—"}×${reps ?? "—"}`]),
+              el("td", { class:"muted" }, [load ?? "—"]),
+              el("td", { class:"muted" }, [rpe ?? "—"]),
+              el("td", { class:"muted" }, [notes]),
+              el("td", { class:"tdActions" }, [
+                el("button", { class:"btn small bad", onclick: async () => {
                   if (!confirm("Excluir este item?")) return;
                   try{
-                    await sbDelete("session_items", `id=eq.${encodeURIComponent(it.id)}`);
+                    await sbDelete(TABLES.items, `${COL.items.id}=eq.${encodeURIComponent(it[COL.items.id])}`);
                     await loadSessionItems(sessionId, container);
-                  }catch(e){ alert("Erro ao excluir item: " + e.message); }
-                }},["Excluir"])
+                  }catch(e){
+                    alert("Erro ao excluir item: " + e.message);
+                  }
+                }}, ["Excluir"])
               ])
             ]);
           }))
         ]);
 
         container.appendChild(table);
+
       }catch(e){
         container.className = "status bad";
         container.textContent = "Erro ao carregar itens: " + e.message;
       }
     }
 
-    /* =========================
-       9) Relatórios
-    ========================= */
-    function viewRelatorios(){
-      return el("div",{class:"grid"},[
-        el("div",{class:"card"},[
-          el("h2",{},["Relatórios"]),
-          el("p",{},["Export simples (CSV)."]),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn ok", onclick:()=>exportCsv("students", state.cache.students)},["Exportar alunos (CSV)"]),
-            el("button",{class:"btn ok", onclick:()=>exportCsv("sessions", state.cache.sessions)},["Exportar sessões (CSV)"]),
-            el("button",{class:"btn", onclick:refreshAll},["Atualizar dados"]),
+    /* ===============================================================
+       9) EXERCÍCIOS (exercises)
+    =============================================================== */
+    function viewExercicios(){
+      return el("div", { class:"grid" }, [
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Biblioteca de Exercícios"]),
+          el("p", {}, ["Cadastre exercícios e use nas sessões."]),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn ok", onclick: () => openExerciseModal() }, ["+ Novo exercício"]),
+            el("button", { class:"btn", onclick: loadExercisesThenRender }, ["Recarregar"]),
           ]),
-          el("div",{class:"hr"}),
-          el("div",{class:"muted", style:"font-size:13px; line-height:1.55"},[
-            "Próximo upgrade (quando você pedir): PDF por aluno + controle de carga."
+          el("div", { class:"hr" }),
+          renderExercisesTable(),
+        ]),
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Seeds rápidos (opcional)"]),
+          el("p", {}, ["Se você quiser, o Admin tem um botão para inserir uma base inicial de exercícios."]),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn", onclick: () => setView("admin") }, ["Ir para Admin"])
+          ])
+        ])
+      ]);
+    }
+
+    async function loadExercisesThenRender(){
+      state.loading = true; render();
+      try{ await loadExercises(); }
+      catch(e){ alert("Erro ao carregar exercícios: " + e.message); }
+      finally{ state.loading = false; render(); }
+    }
+
+    function renderExercisesTable(){
+      const data = state.cache.exercises || [];
+      if (!data.length){
+        return el("div", { class:"status" }, ["Nenhum exercício ainda. Clique em “+ Novo exercício” ou use Seeds no Admin."]);
+      }
+
+      const table = el("table", {}, [
+        el("thead", {}, [
+          el("tr", {}, [
+            el("th", {}, ["Nome"]),
+            el("th", {}, ["Grupo"]),
+            el("th", {}, ["Criado"]),
+            el("th", {}, ["Ações"]),
           ])
         ]),
-        el("div",{class:"card"},[
-          el("h2",{},["Observação"]),
-          el("p",{},["V1 robusto em 1 arquivo. Evolução só com schema travado."]),
-          el("div",{class:"status"},["Quando você confirmar as colunas finais (principalmente métodos), eu travo o padrão e evoluímos."])
+        el("tbody", {}, data.map(row => {
+          const name = row[COL.exercises.name] || "—";
+          const group = row[COL.exercises.group_name] || "—";
+          const created = fmtDateTime(row[COL.exercises.created_at]);
+          return el("tr", {}, [
+            el("td", {}, [name]),
+            el("td", { class:"muted" }, [group]),
+            el("td", { class:"muted" }, [created]),
+            el("td", { class:"tdActions" }, [
+              el("button", { class:"btn small", onclick: () => openExerciseModal(row) }, ["Editar"]),
+              " ",
+              el("button", { class:"btn small bad", onclick: () => deleteExercise(row) }, ["Excluir"]),
+            ])
+          ]);
+        }))
+      ]);
+
+      return el("div", {}, [table]);
+    }
+
+    function openExerciseModal(existing=null){
+      const back = el("div", { class:"modalBackdrop", style:"display:flex" });
+      const m = el("div", { class:"modal" });
+      const isEdit = !!existing;
+
+      const inName = el("input", { value: existing?.[COL.exercises.name] || "", placeholder:"Ex: Agachamento livre" });
+      const inGroup = el("input", { value: existing?.[COL.exercises.group_name] || "", placeholder:"Ex: Inferiores / Costas / Peito" });
+      const inNotes = el("textarea", {}, [ existing?.[COL.exercises.notes] || "" ]);
+
+      m.appendChild(el("div", { class:"modalHead" }, [
+        el("h3", {}, [isEdit ? "Editar exercício" : "Novo exercício"]),
+        el("button", { class:"close", onclick: () => back.remove() }, ["Fechar"])
+      ]));
+
+      m.appendChild(el("div", { class:"modalBody" }, [
+        el("div", { class:"row" }, [
+          el("div", {}, [ el("label", {}, ["Nome"]), inName ]),
+          el("div", {}, [ el("label", {}, ["Grupo (group_name)"]), inGroup ]),
+        ]),
+        el("label", {}, ["Notas (opcional)"]),
+        inNotes,
+        el("div", { class:"actions" }, [
+          el("button", { class:"btn ok", onclick: async () => {
+            const payload = {
+              [COL.exercises.name]: (inName.value || "").trim(),
+              [COL.exercises.group_name]: (inGroup.value || "").trim(),
+              [COL.exercises.notes]: (inNotes.value || "").trim(),
+            };
+            if (!payload[COL.exercises.name]) { alert("Preencha o nome do exercício."); return; }
+
+            try{
+              if (isEdit){
+                await updateSmart(TABLES.exercises, `${COL.exercises.id}=eq.${encodeURIComponent(existing[COL.exercises.id])}`, payload);
+              } else {
+                await insertSmart(TABLES.exercises, payload);
+              }
+              await loadExercises();
+              back.remove();
+              render();
+            }catch(e){
+              alert("Erro ao salvar exercício: " + e.message);
+            }
+          }}, [isEdit ? "Salvar" : "Criar"]),
+          el("button", { class:"btn", onclick: () => back.remove() }, ["Cancelar"])
+        ])
+      ]));
+
+      back.appendChild(m);
+      document.body.appendChild(back);
+    }
+
+    async function deleteExercise(row){
+      if (!confirm("Excluir este exercício? (Se ele estiver usado em session_items, pode dar erro)")) return;
+      try{
+        await sbDelete(TABLES.exercises, `${COL.exercises.id}=eq.${encodeURIComponent(row[COL.exercises.id])}`);
+        await loadExercises();
+        render();
+      }catch(e){
+        alert("Erro ao excluir: " + e.message);
+      }
+    }
+
+    /* ===============================================================
+       10) RELATÓRIOS (CSV simples)
+    =============================================================== */
+    function viewRelatorios(){
+      return el("div", { class:"grid" }, [
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Relatórios"]),
+          el("p", {}, ["Export simples (CSV) para alunos e sessões."]),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn ok", onclick: () => exportCsv("students", state.cache.students) }, ["Exportar alunos (CSV)"]),
+            el("button", { class:"btn ok", onclick: () => exportCsv("sessions", state.cache.sessions) }, ["Exportar sessões (CSV)"]),
+            el("button", { class:"btn", onclick: refreshAll }, ["Atualizar dados"]),
+          ]),
+          el("div", { class:"hr" }),
+          el("div", { class:"muted", style:"font-size:13px; line-height:1.55" }, [
+            "Próximo upgrade (quando você pedir):",
+            el("br"),
+            "• PDF por aluno (histórico + métodos regressivos por sessão).",
+            el("br"),
+            "• Dashboard de carga (PSR/PSE/Strain/ACWR) integrado."
+          ])
+        ]),
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Observação"]),
+          el("p", {}, ["Este V1 é simples e robusto em 1 arquivo. Evolução segura depende do schema “congelado”."]),
+          el("div", { class:"status" }, ["Quando você confirmar o schema final, eu travo o padrão e evoluímos sem retrabalho."])
         ])
       ]);
     }
@@ -1574,7 +1717,10 @@
         const s = String(v).replaceAll('"','""');
         return `"${s}"`;
       };
-      const lines = [ cols.join(","), ...rows.map(r => cols.map(c => esc(r[c])).join(",")) ];
+      const lines = [
+        cols.join(","),
+        ...rows.map(r => cols.map(c => esc(r[c])).join(","))
+      ];
       const blob = new Blob([lines.join("\n")], { type:"text/csv;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -1586,37 +1732,42 @@
       URL.revokeObjectURL(url);
     }
 
-    /* =========================
-       10) Admin
-    ========================= */
+    /* ===============================================================
+       11) ADMIN
+    =============================================================== */
     function viewAdmin(){
-      return el("div",{class:"grid"},[
-        el("div",{class:"card"},[
-          el("h2",{},["Admin (padrão completo)"]),
-          el("p",{},["Seeds e diagnóstico. Ações destrutivas bloqueadas."]),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn", onclick:refreshAll},["Recarregar tudo"]),
-            el("button",{class:"btn", onclick:()=>$("#btnOpenConfig").click()},["Config Supabase"]),
+      return el("div", { class:"grid" }, [
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Admin (padrão completo)"]),
+          el("p", {}, ["Ações de manutenção, seeds e diagnóstico."]),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn", onclick: refreshAll }, ["Recarregar tudo"]),
+            el("button", { class:"btn", onclick: () => $("#btnOpenConfig").click() }, ["Config Supabase"]),
           ]),
-          el("div",{class:"hr"}),
-          el("div",{class:"actions"},[
-            el("button",{class:"btn ok", onclick:seedExercises},["Seed: Exercícios básicos"]),
-            el("button",{class:"btn", onclick:ensureProfileExists},["Garantir perfil (profiles)"]),
-            el("button",{class:"btn bad", onclick:()=>alert("Bloqueado no V1. Segurança primeiro.")},["Ações destrutivas (bloqueado)"]),
+          el("div", { class:"hr" }),
+          el("div", { class:"actions" }, [
+            el("button", { class:"btn ok", onclick: seedExercises }, ["Seed: Exercícios básicos"]),
+            el("button", { class:"btn", onclick: ensureProfileExists }, ["Garantir perfil (profiles)"]),
+            el("button", { class:"btn bad", onclick: () => alert("Em V1 não apagamos em massa. Segurança primeiro.") }, ["Ações destrutivas (bloqueado)"]),
           ]),
-          el("div",{class:"hr"}),
-          el("div",{class:"status"},["Admin pronto. Use seeds apenas para acelerar base."])
+          el("div", { class:"hr" }),
+          el("div", { class:"status" }, ["Admin pronto. Use seeds apenas se você quiser acelerar a base."])
         ]),
-        el("div",{class:"card"},[
-          el("h2",{},["Estado atual"]),
-          el("p",{},["Resumo do que está no navegador."]),
-          el("div",{class:"muted", style:"font-size:13px; line-height:1.55"},[
-            "UID: ", el("span",{class:"mono"},[state.session?.user?.id || "—"]), el("br"),
-            "Email: ", el("span",{class:"mono"},[state.session?.email || "—"]), el("br"),
-            "Perfil: ", el("span",{class:"mono"},[state.profile ? "OK" : "—"]), el("br"),
-            "Alunos: ", el("span",{class:"mono"},[String(state.cache.students?.length || 0)]), el("br"),
-            "Sessões: ", el("span",{class:"mono"},[String(state.cache.sessions?.length || 0)]), el("br"),
-            "Exercícios: ", el("span",{class:"mono"},[String(state.cache.exercises?.length || 0)]),
+        el("div", { class:"card" }, [
+          el("h2", {}, ["Estado atual"]),
+          el("p", {}, ["Resumo do que está no navegador agora."]),
+          el("div", { class:"muted", style:"font-size:13px; line-height:1.55" }, [
+            "UID: ", el("span", { class:"mono" }, [state.session?.user?.id || "—"]),
+            el("br"),
+            "Email: ", el("span", { class:"mono" }, [state.session?.email || "—"]),
+            el("br"),
+            "Perfil: ", el("span", { class:"mono" }, [state.profile ? "OK" : "—"]),
+            el("br"),
+            "Alunos: ", el("span", { class:"mono" }, [String(state.cache.students?.length || 0)]),
+            el("br"),
+            "Sessões: ", el("span", { class:"mono" }, [String(state.cache.sessions?.length || 0)]),
+            el("br"),
+            "Exercícios: ", el("span", { class:"mono" }, [String(state.cache.exercises?.length || 0)]),
           ])
         ])
       ]);
@@ -1627,24 +1778,25 @@
         const uid = state.session?.user?.id;
         if (!uid) return;
 
-        const rows = await sbSelect("profiles", `select=*&id=eq.${encodeURIComponent(uid)}&limit=1`);
+        const rows = await sbSelect(TABLES.profiles, `select=*&${COL.profiles.id}=eq.${encodeURIComponent(uid)}&limit=1`);
         if (rows?.[0]){
           state.profile = rows[0];
-          applyBrandLogo(state.profile);
+          applyAvatarFromProfile();
           alert("Perfil já existe. OK.");
           render();
           return;
         }
 
         const payload = {
-          id: uid,
-          name: "Fabiano Samurai",
-          cref: "CREF1:043866-G/RJ",
-          slogan: "Personal na palma da sua mão",
-          avatar_url: null,
-          logo_url: null,
+          [COL.profiles.id]: uid,
+          [COL.profiles.name]: "Fabiano Samurai",
+          [COL.profiles.cref]: "CREF1: 043866-G/RJ",
+          [COL.profiles.slogan]: "Personal na palma da sua mão",
+          [COL.profiles.avatar_url]: null,
+          [COL.profiles.logo_url]: null,
         };
-        await sbInsert("profiles", payload);
+
+        await sbInsert(TABLES.profiles, payload);
         await loadProfile();
         alert("Perfil criado. OK.");
         render();
@@ -1658,19 +1810,28 @@
         const base = [
           { name:"Agachamento livre", group_name:"Inferiores" },
           { name:"Leg press", group_name:"Inferiores" },
-          { name:"Mesa flexora", group_name:"Inferiores" },
           { name:"Cadeira extensora", group_name:"Inferiores" },
+          { name:"Mesa flexora", group_name:"Inferiores" },
+          { name:"Panturrilha em pé", group_name:"Inferiores" },
           { name:"Supino reto", group_name:"Peito" },
           { name:"Remada baixa", group_name:"Costas" },
           { name:"Puxada alta", group_name:"Costas" },
           { name:"Desenvolvimento militar", group_name:"Ombros" },
           { name:"Elevação lateral", group_name:"Ombros" },
-          { name:"Panturrilha em pé", group_name:"Inferiores" },
         ];
+
         let ok = 0;
         for (const ex of base){
-          try{ await insertUltraSafe("exercises", ex); ok++; }catch(_){}
+          try{
+            await insertSmart(TABLES.exercises, {
+              [COL.exercises.name]: ex.name,
+              [COL.exercises.group_name]: ex.group_name,
+              [COL.exercises.notes]: ""
+            });
+            ok++;
+          }catch(_){}
         }
+
         await loadExercises();
         alert(`Seed concluído. Inseridos: ${ok} (alguns podem já existir).`);
         render();
@@ -1679,14 +1840,16 @@
       }
     }
 
-    /* =========================
-       11) Boot
-    ========================= */
+    /* ===============================================================
+       12) BOOT
+    =============================================================== */
     (function boot(){
       setEnvTag();
       syncBadge();
-      applyBrandLogo(null);
       render();
+
+      // se você quiser “persistir” sessão depois, a gente implementa refresh_token.
+      // por enquanto, V1 simples e seguro.
     })();
   </script>
 </body>
